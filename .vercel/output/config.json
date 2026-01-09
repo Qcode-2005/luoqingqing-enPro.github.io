@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "routes": [
+    {
+      "src": "^/api/(.*)$",
+      "dest": "/index.js"
+    },
+    {
+      "src": "^/(.*)$",
+      "dest": "/envPro/$1"
+    }
+  ],
+  "framework": {
+    "version": "4.22.1"
+  },
+  "crons": []
+}
