@@ -1,7 +1,12 @@
 // enPro/index.js - 后端入口文件
+const dotenv = require('dotenv');
+const result = dotenv.config({ path: './envPro/server/config/.env' });
+console.log('Environment variables loaded:', result.parsed);
+console.log('POSTGRES_URL:', process.env.POSTGRES_URL);
+
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 // 1. 解决跨域（前端调用后端接口不会报错）
 const cors = require('cors');
 app.use(cors());

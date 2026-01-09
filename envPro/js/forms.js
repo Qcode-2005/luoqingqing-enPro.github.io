@@ -81,18 +81,19 @@ $(document).ready(function() {
         const pwd2 = $('#signup-password2').val().trim();
 
         // 前端校验（保留原有逻辑）
-        if (!username) { alert('请填写用户名！'); return; }
-        if (!phone) { alert('请填写手机号！'); return; }
+        if (!username) { $('#signup-msg').text('请填写用户名！').show(); return; }
+        if (!phone) { $('#signup-msg').text('请填写手机号！').show(); return; }
         if (!validatePhone(phone)) {
-            alert('请输入有效的11位手机号！');
+            $('#signup-msg').text('请输入有效的11位手机号！').show();
             $('#signup-phone').focus();
             return;
         }
-        if (!email) { alert('请填写邮箱！'); return; }
+        if (!email) { $('#signup-msg').text('请填写邮箱！').show(); return; }
         const emailReg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailReg.test(email)) { alert('邮箱格式错误！'); return; }
-        if (!pwd) { alert('请填写密码！'); return; }
-        if (pwd !== pwd2) { alert('两次密码不一致！'); return; }
+        if (!emailReg.test(email)) { $('#signup-msg').text('邮箱格式错误！').show(); return; }
+        if (!pwd) { $('#signup-msg').text('请填写密码！').show(); return; }
+        if (pwd !== pwd2) { $('#signup-msg').text('两次密码不一致！').show(); return; }
+        $('#signup-msg').hide();
 
         try {
             // 【关键】修正端口（改成你实际的端口，比如3001）+ 适配后端参数
@@ -112,11 +113,11 @@ $(document).ready(function() {
             // 【关键】适配后端返回格式（code/msg）
             const result = await response.json();
             if (result.code === 200) { // 后端成功返回code=200
-                alert(`注册成功！用户名：${username}，手机号：${phone}`);
+                $('#signup-msg').text(`注册成功！用户名：${username}，手机号：${phone}`).removeClass('text-danger').addClass('text-success').show();
                 $('.tab-menu a[data-tab="login"]').trigger('click');
                 $(this)[0].reset();
             } else { // 后端失败返回错误信息
-                alert('注册失败：' + result.msg);
+                $('#signup-msg').text('注册失败：' + result.msg).show();
             }
         } catch (error) {
             console.error('注册请求失败：', error);
@@ -128,7 +129,7 @@ $(document).ready(function() {
             } else {
                 errorMsg += '请检查后端服务是否启动（端口：3001）';
             }
-            alert(errorMsg);
+            $('#signup-msg').text(errorMsg).show();
         }
     });
 
@@ -140,9 +141,10 @@ $(document).ready(function() {
         const pwd = $('#login-password').val().trim();
 
         if (!username || !pwd) {
-            alert('请填写用户名和密码！');
+            $('#login-msg').text('请填写用户名和密码！').show();
             return;
         }
+        $('#login-msg').hide();
 
         try {
             // 【关键】修正端口（改成你实际的端口，比如3001）
@@ -160,10 +162,12 @@ $(document).ready(function() {
             // 【关键】适配后端返回格式（code/msg/data）
             const result = await response.json();
             if (result.code === 200) { // 后端成功返回code=200
-                alert('登录成功！即将跳转到首页');
-                window.location.href = 'index.html';
+                $('#login-msg').text('登录成功！即将跳转到首页').removeClass('text-danger').addClass('text-success').show();
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
             } else { // 后端失败返回错误信息
-                alert('登录失败：' + result.msg);
+                $('#login-msg').text('登录失败：' + result.msg).show();
                 $('#login-password').val('');
             }
         } catch (error) {
@@ -178,7 +182,7 @@ $(document).ready(function() {
             } else {
                 errorMsg += '请检查后端服务是否启动（端口：3001）';
             }
-            alert(errorMsg);
+            $('#login-msg').text(errorMsg).show();
         }
     });
 

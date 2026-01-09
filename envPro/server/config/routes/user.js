@@ -7,12 +7,12 @@ const bcrypt = require('bcryptjs');
 router.get('/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT 1 + 1 AS result');
-    res.json({ success: true, message: '数据库连接成功', result: result.rows[0].result });
+    res.json({ code: 200, msg: '数据库连接成功' });
   } catch (err) {
     console.error('数据库连接失败:', err);
     res.status(500).json({ 
-      success: false, 
-      message: '数据库连接失败', 
+      code: 500, 
+      msg: '数据库连接失败', 
       error: err.message,
       info: '请确保PostgreSQL服务器已启动，并且连接字符串正确。在开发环境中，您可以使用模拟数据进行测试。'
     });
@@ -26,17 +26,17 @@ router.post('/register', async (req, res) => {
     
     // 验证必填字段
     if (!username || !password) {
-      return res.status(400).json({ success: false, message: '用户名和密码是必填项' });
+      return res.status(400).json({ code: 400, msg: '用户名和密码是必填项' });
     }
     
     // 验证用户名长度
     if (username.length < 3 || username.length > 50) {
-      return res.status(400).json({ success: false, message: '用户名长度必须在3-50个字符之间' });
+      return res.status(400).json({ code: 400, msg: '用户名长度必须在3-50个字符之间' });
     }
     
     // 验证密码强度
     if (password.length < 6) {
-      return res.status(400).json({ success: false, message: '密码长度不能少于6个字符' });
+      return res.status(400).json({ code: 400, msg: '密码长度不能少于6个字符' });
     }
     
     // 检查用户名是否已存在
@@ -46,7 +46,7 @@ router.post('/register', async (req, res) => {
     );
     
     if (usernameCheck.rows.length > 0) {
-      return res.status(400).json({ success: false, message: '用户名已被使用' });
+      return res.status(400).json({ code: 400, msg: '用户名已被使用' });
     }
     
     // 检查邮箱是否已存在（如果提供了邮箱）
@@ -57,7 +57,7 @@ router.post('/register', async (req, res) => {
       );
       
       if (emailCheck.rows.length > 0) {
-        return res.status(400).json({ success: false, message: '邮箱已被注册' });
+        return res.status(400).json({ code: 400, msg: '邮箱已被注册' });
       }
     }
     
@@ -69,7 +69,7 @@ router.post('/register', async (req, res) => {
       );
       
       if (phoneCheck.rows.length > 0) {
-        return res.status(400).json({ success: false, message: '手机号已被注册' });
+        return res.status(400).json({ code: 400, msg: '手机号已被注册' });
       }
     }
     
@@ -89,20 +89,13 @@ router.post('/register', async (req, res) => {
     const newUser = result.rows[0];
     
     res.json({
-      success: true,
-      message: '注册成功',
-      user: {
-        id: newUser.id,
-        username: newUser.username,
-        nickname: newUser.nickname,
-        email: newUser.email,
-        phone: newUser.phone
-      }
+      code: 200,
+      msg: '注册成功'
     });
     
   } catch (err) {
     console.error('注册失败:', err);
-    res.status(500).json({ success: false, message: '注册失败', error: err.message });
+    res.status(500).json({ code: 500, msg: '注册失败', error: err.message });
   }
 });
 
@@ -115,8 +108,8 @@ router.post('/login', async (req, res) => {
     // 2. 基础参数校验
     if (!username || !password) {
       return res.status(400).json({ 
-        success: false, 
-        message: '用户名和密码不能为空' 
+        code: 400, 
+        msg: '用户名和密码不能为空' 
       });
     }
     
@@ -129,8 +122,8 @@ router.post('/login', async (req, res) => {
     // 4. 检查用户是否存在
     if (userQuery.rows.length === 0) {
       return res.status(400).json({ 
-        success: false, 
-        message: '用户名不存在' 
+        code: 400, 
+        msg: '用户名不存在' 
       });
     }
     
@@ -140,30 +133,23 @@ router.post('/login', async (req, res) => {
     
     if (!isPasswordCorrect) {
       return res.status(400).json({ 
-        success: false, 
-        message: '密码错误' 
+        code: 400, 
+        msg: '密码错误' 
       });
     }
     
-    // 6. 登录成功，返回用户信息（隐藏密码）
+    // 6. 登录成功，只返回成功信息
     res.json({
-      success: true,
-      message: '登录成功',
-      user: {
-        id: user.id,
-        username: user.username,
-        nickname: user.nickname,
-        email: user.email,
-        phone: user.phone
-      }
+      code: 200,
+      msg: '登录成功'
     });
     
   } catch (err) {
     // 捕获所有异常，避免请求超时
     console.error('登录失败:', err);
     res.status(500).json({ 
-      success: false, 
-      message: '登录接口内部错误', 
+      code: 500, 
+      msg: '登录接口内部错误', 
       error: err.message 
     });
   }

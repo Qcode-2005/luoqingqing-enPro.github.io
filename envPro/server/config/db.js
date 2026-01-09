@@ -1,31 +1,39 @@
+// 环境变量已经在index.js中加载
+console.log('🔍 db.js正在执行，POSTGRES_URL:', process.env.POSTGRES_URL);
+
 // 检查是否配置了POSTGRES_URL环境变量
 if (process.env.POSTGRES_URL) {
-  // 生产环境：使用真实的PostgreSQL连接池
+  // 生产环境：使用真实的Supabase PostgreSQL连接池
   const { Pool } = require('pg');
   
   const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false } // Supabase必须加这行
   });
 
-  // 测试连接并创建表
+  // 测试连接并创建表（适配Supabase的UUID主键）
   pool.connect((err, client, release) => {
     if (err) {
       console.error('❌ PostgreSQL连接失败：', err.message);
-      console.info('💡 请确保PostgreSQL服务器已启动，并且连接字符串正确。');
+      console.info('💡 请检查：1.POSTGRES_URL是否正确 2.Supabase数据库是否启动 3.网络是否能访问Supabase');
       return; // 不再抛出错误，允许服务继续运行
     }
     console.log('✅ PostgreSQL连接成功！');
 
-    // 创建用户表（首次启动自动创建）
+    // 创建用户表（适配你的注册页面字段，用UUID主键，首次启动自动创建）
     const createUserTable = `
+      -- 先创建UUID扩展（Supabase需要）
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+      
+      -- 创建用户表（不存在则创建）
       CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- 适配Supabase的UUID
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
         nickname TEXT DEFAULT '',
-        email TEXT,
-        phone TEXT
+        email TEXT UNIQUE, -- 邮箱唯一
+        phone TEXT UNIQUE, -- 手机号唯一
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 自动记录创建时间
       )
     `;
     client.query(createUserTable, (err) => {
@@ -38,7 +46,7 @@ if (process.env.POSTGRES_URL) {
   // 导出真实连接池
   module.exports = { pool };
 } else {
-  // 开发环境：使用模拟的连接池
+  // 开发环境：使用模拟的连接池（保留原有逻辑，适配新字段）
   console.warn('⚠️ 未配置POSTGRES_URL环境变量，将使用模拟数据进行开发。');
   console.info('💡 在生产环境部署时，请设置POSTGRES_URL环境变量以连接真实的PostgreSQL数据库。');
   
@@ -54,13 +62,19 @@ if (process.env.POSTGRES_URL) {
         return { rows: [{ result: 2 }] };
       }
       
-      // 模拟注册用户
+      // 模拟注册用户（适配新字段：email/phone唯一）
       if (sql.includes('INSERT INTO users')) {
         const [username, password, nickname, email, phone] = params;
         
-        // 检查用户名是否已存在
+        // 检查用户名/邮箱/手机号是否已存在
         if (mockUsers.some(user => user.username === username)) {
           throw new Error('duplicate key value violates unique constraint "users_username_key"');
+        }
+        if (email && mockUsers.some(user => user.email === email)) {
+          throw new Error('duplicate key value violates unique constraint "users_email_key"');
+        }
+        if (phone && mockUsers.some(user => user.phone === phone)) {
+          throw new Error('duplicate key value violates unique constraint "users_phone_key"');
         }
         
         // 创建新用户
@@ -68,9 +82,10 @@ if (process.env.POSTGRES_URL) {
           id: nextId++,
           username,
           password,
-          nickname,
-          email,
-          phone
+          nickname: nickname || '',
+          email: email || null,
+          phone: phone || null,
+          created_at: new Date().toISOString()
         };
         
         mockUsers.push(newUser);
@@ -81,16 +96,16 @@ if (process.env.POSTGRES_URL) {
             username: newUser.username, 
             nickname: newUser.nickname, 
             email: newUser.email, 
-            phone: newUser.phone 
+            phone: newUser.phone,
+            created_at: newUser.created_at
           }] 
         };
       }
       
-      // 模拟查询用户
+      // 模拟查询用户（按用户名）
       if (sql.includes('SELECT * FROM users WHERE username = $1')) {
         const [username] = params;
         const user = mockUsers.find(user => user.username === username);
-        
         return { rows: user ? [user] : [] };
       }
       
@@ -98,7 +113,6 @@ if (process.env.POSTGRES_URL) {
       if (sql.includes('SELECT * FROM users WHERE username = $1')) {
         const [username] = params;
         const exists = mockUsers.some(user => user.username === username);
-        
         return { rows: exists ? [{}] : [] };
       }
       
@@ -106,7 +120,6 @@ if (process.env.POSTGRES_URL) {
       if (sql.includes('SELECT * FROM users WHERE email = $1')) {
         const [email] = params;
         const exists = mockUsers.some(user => user.email === email);
-        
         return { rows: exists ? [{}] : [] };
       }
       
@@ -114,7 +127,6 @@ if (process.env.POSTGRES_URL) {
       if (sql.includes('SELECT * FROM users WHERE phone = $1')) {
         const [phone] = params;
         const exists = mockUsers.some(user => user.phone === phone);
-        
         return { rows: exists ? [{}] : [] };
       }
       
