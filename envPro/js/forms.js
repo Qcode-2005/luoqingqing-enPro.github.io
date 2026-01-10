@@ -96,8 +96,11 @@ $(document).ready(function() {
 
 
         try {
-            // 使用相对路径，自动适配当前域名
-            const response = await fetch('/api/user/register', {
+            // 根据当前环境自动切换API地址
+            const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? 'http://localhost:3001/api/user/register' 
+                : '/api/user/register';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -147,8 +150,11 @@ $(document).ready(function() {
 
 
         try {
-            // 使用相对路径，自动适配当前域名
-            const response = await fetch('/api/user/login', {
+            // 根据当前环境自动切换API地址
+            const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? 'http://localhost:3001/api/user/login' 
+                : '/api/user/login';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

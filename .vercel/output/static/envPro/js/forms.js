@@ -96,8 +96,11 @@ $(document).ready(function() {
 
 
         try {
-            // 【关键】修正端口（改成你实际的端口，比如3001）+ 适配后端参数
-            const response = await fetch('http://localhost:3001/api/user/register', {
+            // 根据当前环境自动切换API地址
+            const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? 'http://localhost:3001/api/user/register' 
+                : '/api/user/register';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -147,8 +150,11 @@ $(document).ready(function() {
 
 
         try {
-            // 【关键】修正端口（改成你实际的端口，比如3001）
-            const response = await fetch('http://localhost:3001/api/user/login', {
+            // 根据当前环境自动切换API地址
+            const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? 'http://localhost:3001/api/user/login' 
+                : '/api/user/login';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -197,14 +203,4 @@ $(document).ready(function() {
         const code = $('#refind-captcha').val();
 
         if (!code) { alert('请填写验证码！'); return; }
-        if (code !== '8888') {
-            alert('验证码错误（测试专用：8888）！');
-            $('#refind-captcha').val('');
-            return;
-        }
-
-        alert(`admin用户密码找回成功！新密码已发送至邮箱${email}（测试提示：新密码为admin888）`);
-        $('.tab-menu a[data-tab="login"]').trigger('click');
-        $(this)[0].reset();
-    });
-});
+        if (code
