@@ -10,11 +10,11 @@
   functions = "netlify/functions"
 
 # 重定向配置
-# 1. 默认访问直接显示登录页面（重写，URL不变）
+# 1. 默认访问直接跳转到登录页面
 [[redirects]]
   from = "/"
   to = "/login.html"
-  status = 200
+  status = 302
 
 # 2. 其他路由保持不变
 [[redirects]]
