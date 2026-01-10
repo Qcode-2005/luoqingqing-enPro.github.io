@@ -3,6 +3,11 @@ const dotenv = require('dotenv');
 // 调整.env文件路径，适配当前文件位置
 const result = dotenv.config({ path: '../../envPro/server/config/.env' });
 
+// 输出环境变量信息用于调试
+console.log('Netlify Functions - Environment variables:', process.env);
+console.log('Netlify Functions - dotenv result:', result);
+console.log('Netlify Functions - POSTGRES_URL:', process.env.POSTGRES_URL);
+
 const express = require('express');
 const serverless = require('serverless-http');
 const app = express();
@@ -19,8 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 const { pool } = require('../../envPro/server/config/db.js');
 const userRoutes = require('../../envPro/server/config/routes/user.js');
 
-// 4. 使用用户路由
+// 4. 使用用户路由 - 适配Netlify Functions的路径转发
 app.use('/api/user', userRoutes);
+
+// 5. 备选路由（确保通过Netlify Functions转发的请求能正确匹配）
+app.use('/.netlify/functions/server/api/user', userRoutes);
 
 // 5. 健康检查接口
 app.get('/', (req, res) => {

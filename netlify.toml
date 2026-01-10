@@ -9,7 +9,14 @@
   # 函数目录
   functions = "netlify/functions"
 
-# 重定向配置（确保单页应用路由正常工作）
+# 重定向配置
+# 1. 确保API请求路由到Netlify Functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/server/api/:splat"
+  status = 200
+
+# 2. 确保单页应用路由正常工作
 [[redirects]]
   from = "/*"
   to = "/index.html"

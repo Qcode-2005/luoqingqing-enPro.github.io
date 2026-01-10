@@ -203,4 +203,14 @@ $(document).ready(function() {
         const code = $('#refind-captcha').val();
 
         if (!code) { alert('请填写验证码！'); return; }
-        if (code
+        if (code !== '8888') {
+            alert('验证码错误（测试专用：8888）！');
+            $('#refind-captcha').val('');
+            return;
+        }
+
+        alert(`admin用户密码找回成功！新密码已发送至邮箱${email}（测试提示：新密码为admin888）`);
+        $('.tab-menu a[data-tab="login"]').trigger('click');
+        $(this)[0].reset();
+    });
+});
