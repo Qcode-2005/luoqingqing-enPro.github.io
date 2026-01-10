@@ -123,14 +123,19 @@ $(document).ready(function() {
                 alert('注册失败：' + result.msg);
             }
         } catch (error) {
-            console.error('注册请求失败：', error);
+            console.error('注册请求失败详细信息：', error);
+            console.error('注册请求错误对象：', JSON.stringify(error, null, 2));
             let errorMsg = '注册失败！';
-            if (error.message.includes('404')) {
+            if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+                errorMsg += '网络请求失败，请检查后端服务是否正常运行';
+            } else if (error.message.includes('404')) {
                 errorMsg += '接口地址错误，请检查后端接口路径';
             } else if (error.message.includes('CORS')) {
                 errorMsg += '跨域问题，请确认后端已配置cors';
+            } else if (error.message.includes('500')) {
+                errorMsg += '后端服务内部错误，请查看服务器日志';
             } else {
-                errorMsg += '请检查后端服务是否启动（端口：3001）';
+                errorMsg += '错误原因：' + error.message;
             }
             alert(errorMsg);
         }
@@ -180,16 +185,19 @@ $(document).ready(function() {
                 $('#login-password').val('');
             }
         } catch (error) {
-            console.error('登录请求失败详情：', error);
+            console.error('登录请求失败详细信息：', error);
+            console.error('登录请求错误对象：', JSON.stringify(error, null, 2));
             let errorMsg = '登录失败！';
-            if (error.message.includes('404')) {
+            if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+                errorMsg += '网络请求失败，请检查后端服务是否正常运行';
+            } else if (error.message.includes('404')) {
                 errorMsg += '接口地址错误，请检查后端接口路径';
             } else if (error.message.includes('CORS')) {
                 errorMsg += '跨域问题，请确认后端已配置cors';
             } else if (error.message.includes('500')) {
-                errorMsg += '后端接口报错，请查看后端控制台';
+                errorMsg += '后端服务内部错误，请查看服务器日志';
             } else {
-                errorMsg += '请检查后端服务是否启动（端口：3001）';
+                errorMsg += '错误原因：' + error.message;
             }
             alert(errorMsg);
         }

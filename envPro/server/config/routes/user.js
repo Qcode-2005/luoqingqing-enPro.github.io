@@ -94,9 +94,14 @@ router.post('/register', async (req, res) => {
     });
     
   } catch (err) {
-    console.error('注册失败:', err);
-    res.status(500).json({ code: 500, msg: '注册失败', error: err.message });
-  }
+        console.error('注册失败详细错误:', JSON.stringify(err, null, 2));
+        res.status(500).json({ 
+            code: 500, 
+            msg: '注册失败', 
+            error: err.message,
+            stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+        });
+    }
 });
 
 // 用户登录路由
@@ -145,12 +150,12 @@ router.post('/login', async (req, res) => {
     });
     
   } catch (err) {
-    // 捕获所有异常，避免请求超时
-    console.error('登录失败:', err);
+    console.error('登录失败详细错误:', JSON.stringify(err, null, 2));
     res.status(500).json({ 
       code: 500, 
       msg: '登录接口内部错误', 
-      error: err.message 
+      error: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
     });
   }
 });

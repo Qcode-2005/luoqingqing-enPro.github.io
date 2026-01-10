@@ -1,7 +1,21 @@
+const dotenv = require('dotenv');
+// 加载环境变量
+const fs = require('fs');
+const path = require('path');
+const envPath = path.join(__dirname, '.env');
+console.log('尝试加载的.env文件路径:', envPath);
+console.log('.env文件是否存在:', fs.existsSync(envPath));
+const result = dotenv.config({ path: envPath });
+if (result.error) {
+  console.error('❌ 加载.env文件失败:', result.error);
+}
+
 const express = require('express');
 const app = express();
 // 使用Vercel的环境端口，本地默认3000
 const port = process.env.PORT || 3000; 
+console.log('当前环境变量:', process.env);
+console.log('POSTGRES_URL:', process.env.POSTGRES_URL);
 
 // 引入数据库配置（适配你的db.js导出的pool）
 const { pool } = require('./db'); // 关键修改：用pool而非poolPromise
