@@ -1,38 +1,33 @@
-// enPro/index.js - 后端入口文件
+// Netlify Functions 后端入口文件
 const dotenv = require('dotenv');
-const result = dotenv.config({ path: './envPro/server/config/.env' });
-console.log('Environment variables loaded:', result.parsed);
-console.log('POSTGRES_URL:', process.env.POSTGRES_URL);
+// 调整.env文件路径，适配当前文件位置
+const result = dotenv.config({ path: '../../envPro/server/config/.env' });
 
 const express = require('express');
+const serverless = require('serverless-http');
 const app = express();
-const port = process.env.PORT || 3001;
-// 1. 解决跨域（前端调用后端接口不会报错）
+
+// 1. 解决跨域
 const cors = require('cors');
 app.use(cors());
 
-// 2. 解析前端传的JSON/表单数据
+// 2. 解析请求数据
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 3. 托管静态文件（让前端页面能被访问）
-// 前端文件都在envPro目录下，所以托管envPro目录
-app.use(express.static('envPro'));
+// 3. 引入数据库配置和路由
+const { pool } = require('../../envPro/server/config/db.js');
+const userRoutes = require('../../envPro/server/config/routes/user.js');
 
-// 4. 引入数据库配置和路由
-const { pool } = require('./envPro/server/config/db.js');
-const userRoutes = require('./envPro/server/config/routes/user.js');
-
-// 5. 使用用户路由
+// 4. 使用用户路由
 app.use('/api/user', userRoutes);
 
-// 6. 健康检查接口（验证后端是否启动）
+// 5. 健康检查接口
 app.get('/', (req, res) => {
-  res.send('✅ 后端服务已启动！');
+  res.send('✅ Netlify 后端服务已启动！');
 });
 
-// 7. 启动后端服务
-app.listen(port, () => {
-  console.log(`✅ 后端服务运行在端口：${port}`);
-  console.log(`🔗 本地访问地址：http://localhost:${port}`);
-});
+// 6. 导出使用serverless-http包装的Express应用作为Netlify Functions处理函数
+exports.handler = serverless(app);
+
+// 注意：在Netlify环境中不需要app.listen()，由平台管理端口和请求
