@@ -96,8 +96,8 @@ $(document).ready(function() {
 
 
         try {
-            // 【关键】修正端口（改成你实际的端口，比如3001）+ 适配后端参数
-            const response = await fetch('http://localhost:3001/api/user/register', {
+            // 使用相对路径，自动适配当前域名
+            const response = await fetch('/api/user/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -147,8 +147,8 @@ $(document).ready(function() {
 
 
         try {
-            // 【关键】修正端口（改成你实际的端口，比如3001）
-            const response = await fetch('http://localhost:3001/api/user/login', {
+            // 使用相对路径，自动适配当前域名
+            const response = await fetch('/api/user/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
