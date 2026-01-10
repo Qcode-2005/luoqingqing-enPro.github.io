@@ -163,6 +163,11 @@ $(document).ready(function() {
             const result = await response.json();
             if (result.code === 200) { // 后端成功返回code=200
                 alert('登录成功！即将跳转到首页');
+                // 保存登录状态到localStorage
+                localStorage.setItem('userInfo', JSON.stringify({
+                    username: username,
+                    isLoggedIn: true
+                }));
                 window.location.href = 'index.html';
             } else { // 后端失败返回错误信息
                 alert('登录失败：' + result.msg);
