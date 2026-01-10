@@ -9,15 +9,8 @@
   # 函数目录
   functions = "netlify/functions"
 
-# 重定向配置
-# 1. 默认访问直接跳转到登录页面
-[[redirects]]
-  from = "/"
-  to = "/login.html"
-  status = 302
-
-# 2. 其他路由保持不变
+# 重定向配置（确保单页应用路由正常工作）
 [[redirects]]
   from = "/*"
-  to = "/:splat"
+  to = "/index.html"
   status = 200
