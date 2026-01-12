@@ -255,14 +255,13 @@
             <img src="images/girl.png" alt="女生头像" class="avatar-option" data-avatar="girl.png">
             <img src="images/boy.png" alt="男生头像" class="avatar-option" data-avatar="boy.png">
         </div>
-
         <h2 class="profile-name" id="profileName">绿色践行者</h2>
         <span class="profile-tag"><i class="fa fa-leaf"></i> 环保达人</span>
+        <button class="btn btn-warning ml-2" style="padding: 8px 20px; font-weight: 600;" id="logoutBtn">退出登录</button>
+
         <!-- 新增：已发动态条数 -->
         <div class="dynamic-count" id="dynamicCount"><i class="fa fa-comment-o"></i> 已发动态：<span id="dynamicNumber">0</span> 条</div>
-        <p class="mt-3 text-muted">加入时间：2026-01-01 | 累计减少碳排放：120kg</p>
-        <a href="javascript:void(0)" class="btn-green mt-2" id="editProfileBtn">编辑个人资料</a>
-        <button class="btn-green save-btn" id="saveProfileBtn">确认保存修改</button>
+        <p class="mt-3 text-muted">加入时间：<span id="joinTime">2026-01-01</span> | 累计减少碳排放：<span id="carbonReduction">120</span>kg</p>
     </div>
 
     <div class="row">
@@ -275,7 +274,13 @@
                     <div class="info-label">用户名：</div>
                     <div class="info-value">
                         <span class="value-text" id="usernameText">绿色践行者</span>
-                        <input type="text" class="edit-input" id="usernameInput" value="绿色践行者">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">昵称：</div>
+                    <div class="info-value">
+                        <span class="value-text" id="nicknameText">绿色守护者</span>
+                        <input type="text" class="edit-input" id="nickname" value="绿色守护者">
                         <span class="edit-btn"><i class="fa fa-pencil"></i> 修改</span>
                     </div>
                 </div>
@@ -296,26 +301,6 @@
                     </div>
                 </div>
                 <div class="info-item">
-                    <div class="info-label">性别：</div>
-                    <div class="info-value">
-                        <span class="value-text" id="genderText">女</span>
-                        <select class="edit-input" id="genderInput">
-                            <option value="女" selected>女</option>
-                            <option value="男">男</option>
-                            <option value="保密">保密</option>
-                        </select>
-                        <span class="edit-btn"><i class="fa fa-pencil"></i> 修改</span>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">出生日期：</div>
-                    <div class="info-value">
-                        <span class="value-text" id="birthdayText">1990-01-01</span>
-                        <input type="date" class="edit-input" id="birthdayInput" value="1990-01-01">
-                        <span class="edit-btn"><i class="fa fa-pencil"></i> 修改</span>
-                    </div>
-                </div>
-                <div class="info-item">
                     <div class="info-label">所在城市：</div>
                     <div class="info-value">
                         <span class="value-text" id="cityText">北京市 朝阳区</span>
@@ -323,6 +308,16 @@
                         <span class="edit-btn"><i class="fa fa-pencil"></i> 修改</span>
                     </div>
                 </div>
+                <div class="info-item">
+                    <div class="info-label">生日：</div>
+                    <div class="info-value">
+                        <span class="value-text" id="birthdayText">未设置生日</span>
+                        <input type="date" class="edit-input" id="birthdayInput" value="">
+                        <span class="edit-btn"><i class="fa fa-pencil"></i> 修改</span>
+                    </div>
+                </div>   
+        <a href="javascript:void(0)" class="btn-green mt-2" id="editProfileBtn">编辑个人资料</a>
+        <button class="btn-green save-btn" id="saveProfileBtn">确认保存修改</button>
             </div>
 
             <!-- 安全设置 -->
@@ -332,8 +327,8 @@
                     <div class="info-label">登录密码：</div>
                     <div class="info-value">
                         <span class="value-text">********</span>
-                        <input type="password" class="edit-input" id="passwordInput" placeholder="请输入新密码">
-                        <span class="edit-btn"><i class="fa fa-lock"></i> 修改密码</span>
+                        <input type="password" class="edit-input" id="passwordInput" placeholder="请输入新密码" style="display: none;">
+                        <button class="btn-green btn-sm" id="changePasswordBtn" style="margin-left: 10px;"><i class="fa fa-lock"></i> 修改密码</button>
                     </div>
                 </div>
                 <div class="info-item">
@@ -343,6 +338,10 @@
                 <div class="info-item">
                     <div class="info-label">手机验证：</div>
                     <div class="info-value"><i class="fa fa-check text-success"></i> 已验证</div>
+                </div>
+                <div class="text-right mt-3">
+                    <button class="btn btn-danger btn-sm" id="logoutAccountBtn"><i class="fa fa-sign-out"></i> 注销账户</button>
+                    
                 </div>
             </div>
         </div>
@@ -425,6 +424,65 @@
 		</div>
 	</div>
 </footer>
+
+<!-- 修改密码模态框 -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="changePasswordModalLabel">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="oldPassword">旧密码</label>
+                        <input type="password" class="form-control" id="oldPassword" placeholder="请输入旧密码">
+                        <div id="oldPasswordError" class="text-danger" style="display: none;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">新密码</label>
+                        <input type="password" class="form-control" id="newPassword" placeholder="请输入新密码（至少6位）">
+                        <div id="newPasswordError" class="text-danger" style="display: none;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认新密码</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="请再次输入新密码">
+                        <div id="confirmPasswordError" class="text-danger" style="display: none;"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="confirmPasswordChangeBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 注销账户模态框 -->
+<div class="modal fade" id="logoutAccountModal" tabindex="-1" role="dialog" aria-labelledby="logoutAccountModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="logoutAccountModalLabel">注销账户</h4>
+            </div>
+            <div class="modal-body">
+                <p>您确定要注销账户吗？此操作不可撤销！</p>
+                <div class="form-group">
+                    <label for="logoutPassword">请输入您的密码确认：</label>
+                    <input type="password" class="form-control" id="logoutPassword" placeholder="输入密码">
+                    <div id="logoutPwdError" class="text-danger" style="margin-top: 5px;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmLogoutBtn">确认注销</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>

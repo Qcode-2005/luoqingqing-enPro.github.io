@@ -233,85 +233,13 @@
             <div class="col-md-12 text-center mb-4">
                 <h2><span class="clean-color-contras">低碳工具</span></h2>
                 <div class="clean-line" style="margin: 15px auto;"></div>
-                <p>选择左侧功能按钮，体验AI出行规划或精准计算碳足迹</p>
+                <p>体验计算碳足迹</p>
             </div>
             
             <div class="col-md-10 col-md-offset-1">
                 <div class="calculator-container">
-                    <!-- 左侧按钮栏 -->
-                    <div class="calculator-sidebar">
-                        <button class="calc-btn active" data-target="ai-route">AI低碳出行方案</button>
-                        <button class="calc-btn" data-target="carbon-footprint">碳足迹计算</button>
-                    </div>
-                    
-                    <!-- 右侧内容区 -->
-                    <div class="calculator-content">
-                        <!-- AI低碳出行方案面板 -->
-                        <div id="ai-route-panel" class="calc-panel active">
-                            <form id="aiRouteForm">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="startPoint"><strong>起点</strong></label>
-                                            <input type="text" class="form-control" id="startPoint" placeholder="例如：北京市朝阳区人民广场" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="endPoint"><strong>终点</strong></label>
-                                            <input type="text" class="form-control" id="endPoint" placeholder="例如：北京市海淀区中关村" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <button type="submit" id="calculateBtn" class="calculate-btn btn btn-success">
-                                            <i class="fa fa-robot"></i> AI智能规划出行方案
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                            
-                            <!-- 加载状态 -->
-                            <div id="loading" class="loading">
-                                <div class="loading-spinner"></div>
-                                <p>AI正在为您分析最优低碳出行方案，请稍候...</p>
-                            </div>
-                            
-                            <!-- AI计算结果展示 -->
-                            <div id="aiResultCard" class="result-card">
-                                <div class="result-title">AI智能低碳出行方案</div>
-                                <div class="result-item">
-                                    <strong>起点：</strong> <span id="resultStartPoint">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <strong>终点：</strong> <span id="resultEndPoint">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <strong>精准路线距离：</strong> <span id="resultDistance">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <strong>AI推荐最优出行方式：</strong> <span id="resultTransport">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <strong>预计碳排放量：</strong> <span id="resultCarbon">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <strong>相比传统燃油车减排：</strong> <span id="resultReduction">-</span>
-                                </div>
-                                
-                                <!-- AI专业建议 -->
-                                <div class="ai-suggestion">
-                                    <strong>AI专业建议：</strong>
-                                    <p id="aiSuggestion"></p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- 碳足迹计算面板 -->
                         <div id="carbon-footprint-panel" class="calc-panel">
                             <form id="carbonFootprintForm">
-                                <!-- 出行方式个数选择 -->
                                 <div class="transport-count-group">
                                     <label><strong>选择出行方式个数（1-5个）</strong></label>
                                     <select id="transportCount" class="transport-count-select" required>
@@ -323,9 +251,7 @@
                                     </select>
                                 </div>
                                 
-                                <!-- 动态生成的出行方式选择框容器 -->
                                 <div id="transportItemsContainer" class="transport-item-group">
-                                    <!-- 初始显示1个出行方式选择框 -->
                                     <div class="transport-item">
                                         <label>方式1：</label>
                                         <select class="transport-select" name="transportTypes" required>
@@ -352,14 +278,11 @@
                                 </div>
                             </form>
                             
-                            <!-- 碳足迹计算结果 -->
                             <div id="footprintResultCard" class="result-card">
                                 <div class="result-title">碳足迹计算结果</div>
                                 
-                                <!-- 各方式明细 -->
                                 <div id="footprintDetails" class="result-details"></div>
                                 
-                                <!-- 总碳排放量 -->
                                 <div class="total-carbon">
                                     总碳排放量：<span id="totalCarbon">0</span> 克 CO₂
                                 </div>
@@ -403,8 +326,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="js/lc.ai.js"></script>
-<script src="js/lc.tzj.js"></script>
+<script src="js/api/lc.ai.js"></script>
+
 <script src="js/dingbu.white.js"></script>
 </body>
 </html>

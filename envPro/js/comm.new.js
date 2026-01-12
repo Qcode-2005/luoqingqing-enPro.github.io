@@ -1,41 +1,18 @@
 $(document).ready(function() {
-    // 模拟登录用户信息（实际项目中从后端获取）
-    const currentUser = {
-        id: 1,
-        name: "环保先锋",
-        avatar: "环" // 头像显示的文字
-    };
+    // 从localStorage获取当前登录用户信息
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    // 如果localStorage中没有用户信息，使用默认值
+    if (!currentUser) {
+        currentUser = {
+            id: "f9ea5e02-f813-4e1b-ae17-e6a618980f6a",
+            name: "环保先锋",
+            avatar: "环"
+        };
+    }
 
-    // 模拟其他用户的公开动态（实际项目中从后端获取）
-    const otherUserDynamics = [
-        {
-            id: 1001,
-            userId: 2,
-            userName: "绿色使者",
-            userAvatar: "绿",
-            content: "今天骑自行车出行，既环保又健身，推荐大家尝试！",
-            images: [],
-            createTime: "2026/1/9 10:30:00",
-            likeCount: 15,
-            isLiked: false,
-            privacy: "public"
-        },
-        {
-            id: 1002,
-            userId: 3,
-            userName: "自然守护者",
-            userAvatar: "自",
-            content: "在家自制堆肥，把厨余垃圾变成养花的好肥料，超有成就感！",
-            images: [],
-            createTime: "2026/1/9 09:15:00",
-            likeCount: 23,
-            isLiked: true,
-            privacy: "public"
-        }
-    ];
-
-    // 存储当前用户的动态数据（实际项目中从后端获取/提交）
-    let myDynamicList = [];
+    // 存储动态数据
+    let publicDynamics = [];
+    let myDynamics = [];
 
     // 当前激活的标签页
     let activeTab = "public";
@@ -99,34 +76,47 @@ $(document).ready(function() {
         // 获取选中的权限
         const privacy = $('input[name="privacy"]:checked').val();
 
-        // 构建动态数据
-        const newDynamic = {
-            id: Date.now(), // 用时间戳作为临时ID
-            userId: currentUser.id,
-            userName: currentUser.name,
-            userAvatar: currentUser.avatar,
-            content: content,
-            images: selectedImages.map(img => URL.createObjectURL(img)), // 生成临时预览URL
-            createTime: new Date().toLocaleString(),
-            likeCount: 0,
-            isLiked: false,
-            privacy: privacy
-        };
+        // 创建FormData对象
+        const formData = new FormData();
+        formData.append('user_id', currentUser.id);
+        formData.append('content', content);
+        formData.append('permission', privacy);
 
-        // 添加到我的动态列表 - 最新的动态添加到数组开头（保证最新在顶部）
-        myDynamicList.unshift(newDynamic); 
-        
-        // 重新渲染列表
-        renderDynamicList();
+        // 添加图片文件
+        if (selectedImages.length > 0) {
+            for (let i = 0; i < selectedImages.length; i++) {
+                formData.append('images', selectedImages[i]);
+            }
+        }
 
-        // 重置表单和预览
-        $('#dynamicContent').val('');
-        $('#imagePreview').empty();
-        selectedImages = [];
-        // 重置权限选择为公开
-        $('input[name="privacy"][value="public"]').prop('checked', true);
+        // 发送POST请求到后端API
+        axios.post('http://localhost:3000/api/post', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(response => {
+            if (response.data.success) {
+                // 重新获取动态列表
+                fetchPublicDynamics();
+                fetchMyDynamics();
 
-        alert(`动态发布成功！${privacy === 'public' ? '该动态对所有用户可见' : '该动态仅你自己可见'}`);
+                // 重置表单和预览
+                $('#dynamicContent').val('');
+                $('#imagePreview').empty();
+                selectedImages = [];
+                // 重置权限选择为公开
+                $('input[name="privacy"][value="public"]').prop('checked', true);
+
+                alert(`动态发布成功！${privacy === 'public' ? '该动态对所有用户可见' : '该动态仅你自己可见'}`);
+            } else {
+                alert('发布失败：' + response.data.message);
+            }
+        })
+        .catch(error => {
+            console.error('发布动态失败：', error);
+            alert('发布失败，请稍后重试');
+        });
     });
 
     // 切换标签页
@@ -142,22 +132,91 @@ $(document).ready(function() {
 
     // 删除动态功能
     $('#dynamicList').on('click', '.delete-btn', function() {
-        const dynamicId = parseInt($(this).data('id'));
+        const dynamicId = $(this).data('id');
         
         // 二次确认删除
         if (!confirm('确定要删除这条动态吗？删除后无法恢复！')) {
             return;
         }
 
-        // 从我的动态列表中删除对应动态
-        myDynamicList = myDynamicList.filter(item => item.id !== dynamicId);
-        
-        // 重新渲染列表
-        renderDynamicList();
-        
-        // 提示删除成功
-        alert('动态删除成功！');
+        // 发送DELETE请求到后端API
+        axios.delete(`http://localhost:3000/api/post/${dynamicId}`, {
+            data: { user_id: currentUser.id }
+        })
+        .then(response => {
+            if (response.data.success) {
+                // 更新本地数据
+                myDynamics = myDynamics.filter(item => item.id !== dynamicId);
+                publicDynamics = publicDynamics.filter(item => item.id !== dynamicId);
+                
+                // 重新渲染列表
+                renderDynamicList();
+                
+                // 提示删除成功
+                alert('动态删除成功！');
+            } else {
+                alert('删除失败：' + response.data.message);
+            }
+        })
+        .catch(error => {
+            console.error('删除动态失败：', error);
+            alert('删除失败，请稍后重试');
+        });
     });
+
+    // 获取公开动态
+    function fetchPublicDynamics() {
+        axios.get('http://localhost:3000/api/post/public')
+            .then(response => {
+                if (response.data.success) {
+                    publicDynamics = response.data.posts.map(post => ({
+                        id: post.id,
+                        userId: post.user_id,
+                        userName: post.user_id === currentUser.id ? currentUser.name : "其他用户",
+                        userAvatar: post.user_id === currentUser.id ? currentUser.avatar : "他",
+                        content: post.content,
+                        images: post.image_url ? [post.image_url] : [],
+                        createTime: new Date(post.created_at).toLocaleString(),
+                        privacy: post.permission
+                    }));
+                    if (activeTab === "public") {
+                        renderDynamicList();
+                    }
+                } else {
+                    console.error('获取公开动态失败：', response.data.message);
+                }
+            })
+            .catch(error => {
+                console.error('获取公开动态失败：', error);
+            });
+    }
+
+    // 获取我的动态
+    function fetchMyDynamics() {
+        axios.get(`http://localhost:3000/api/post/user/${currentUser.id}`)
+            .then(response => {
+                if (response.data.success) {
+                    myDynamics = response.data.posts.map(post => ({
+                        id: post.id,
+                        userId: post.user_id,
+                        userName: currentUser.name,
+                        userAvatar: currentUser.avatar,
+                        content: post.content,
+                        images: post.image_url ? [post.image_url] : [],
+                        createTime: new Date(post.created_at).toLocaleString(),
+                        privacy: post.permission
+                    }));
+                    if (activeTab === "my-all") {
+                        renderDynamicList();
+                    }
+                } else {
+                    console.error('获取我的动态失败：', response.data.message);
+                }
+            })
+            .catch(error => {
+                console.error('获取我的动态失败：', error);
+            });
+    }
 
     // 渲染动态列表
     function renderDynamicList() {
@@ -167,13 +226,11 @@ $(document).ready(function() {
         let displayList = [];
 
         if (activeTab === "public") {
-            // 社区公开动态：其他用户的公开动态 + 当前用户的公开动态
-            const myPublicDynamics = myDynamicList.filter(item => item.privacy === "public");
-            // 合并后排序：最新的在顶部（时间戳大的在前）
-            displayList = [...otherUserDynamics, ...myPublicDynamics].sort((a, b) => b.id - a.id);
+            // 社区公开动态
+            displayList = [...publicDynamics].sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
         } else if (activeTab === "my-all") {
-            // 我的所有动态：公开 + 私人（已经是最新在顶部的顺序）
-            displayList = [...myDynamicList];
+            // 我的所有动态：公开 + 私人
+            displayList = [...myDynamics].sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
         }
 
         if (displayList.length === 0) {
@@ -191,8 +248,9 @@ $(document).ready(function() {
 
         // 遍历生成动态项 - 保持最新在顶部的顺序
         displayList.forEach(dynamic => {
-            // 判断是否是当前用户的动态
-            const isMyDynamic = dynamic.userId === currentUser.id;
+            // 确保用户名和头像有默认值
+            const safeUserName = dynamic.userName || "匿名用户";
+            const safeUserAvatar = dynamic.userAvatar || "环";
             
             // 构建图片HTML
             let imagesHtml = '';
@@ -210,7 +268,7 @@ $(document).ready(function() {
                 : `<span class="privacy-tag tag-private"><i class="fa fa-lock"></i> 私人</span>`;
 
             // 构建删除按钮（仅自己的动态显示）
-            const deleteBtn = isMyDynamic 
+            const deleteBtn = dynamic.userId === currentUser.id 
                 ? `<div class="delete-btn" data-id="${dynamic.id}"><i class="fa fa-trash-o"></i></div>` 
                 : '';
 
@@ -219,20 +277,14 @@ $(document).ready(function() {
                 <div class="dynamic-item" data-id="${dynamic.id}">
                     ${deleteBtn}
                     <div class="dynamic-header">
-                        <div class="user-avatar">${dynamic.userAvatar}</div>
+                        <div class="user-avatar">${safeUserAvatar}</div>
                         <div class="user-info">
-                            <h4>${dynamic.userName} ${privacyTag}</h4>
+                            <h4>${safeUserName} ${privacyTag}</h4>
                             <span class="post-time">${dynamic.createTime}</span>
                         </div>
                     </div>
                     <div class="dynamic-content">${dynamic.content}</div>
                     ${imagesHtml}
-                    <div class="dynamic-footer">
-                        <div class="like-btn" data-id="${dynamic.id}">
-                            <i class="fa ${dynamic.isLiked ? 'fa-heart' : 'fa-heart-o'}"></i> 
-                            点赞 (${dynamic.likeCount})
-                        </div>
-                    </div>
                 </div>
             `;
 
@@ -240,29 +292,7 @@ $(document).ready(function() {
         });
     }
 
-    // 点赞功能
-    $('#dynamicList').on('click', '.like-btn', function() {
-        const dynamicId = parseInt($(this).data('id'));
-        
-        // 先检查是否是其他用户的动态
-        let dynamic = otherUserDynamics.find(item => item.id === dynamicId);
-        if (dynamic) {
-            // 处理其他用户动态的点赞
-            dynamic.isLiked = !dynamic.isLiked;
-            dynamic.likeCount += dynamic.isLiked ? 1 : -1;
-        } else {
-            // 检查是否是当前用户的动态
-            dynamic = myDynamicList.find(item => item.id === dynamicId);
-            if (dynamic) {
-                dynamic.isLiked = !dynamic.isLiked;
-                dynamic.likeCount += dynamic.isLiked ? 1 : -1;
-            }
-        }
-        
-        // 重新渲染列表
-        renderDynamicList();
-    });
-
-    // 初始化渲染
-    renderDynamicList();
+    // 初始化获取数据
+    fetchPublicDynamics();
+    fetchMyDynamics();
 });

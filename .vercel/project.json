@@ -1,16 +1,1 @@
-{
-  "projectId": "prj_TiQ2z6FYMjS9e1ZTJkwObxNDL3Dl",
-  "orgId": "team_4zZViiIM05QTeprddVKjt22g",
-  "projectName": "enpro",
-  "settings": {
-    "createdAt": 1767964100424,
-    "framework": null,
-    "devCommand": null,
-    "installCommand": null,
-    "buildCommand": null,
-    "outputDirectory": null,
-    "rootDirectory": null,
-    "directoryListing": false,
-    "nodeVersion": "24.x"
-  }
-}
+{"projectId":"prj_TiQ2z6FYMjS9e1ZTJkwObxNDL3Dl","orgId":"team_4zZViiIM05QTeprddVKjt22g","projectName":"enpro"}

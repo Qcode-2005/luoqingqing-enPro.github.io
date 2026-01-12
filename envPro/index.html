@@ -16,21 +16,13 @@
 <link rel="stylesheet" href="css/font-awesome/css/font-awesome.css">
 <link rel="stylesheet" href="css/slider-pro.css">
 <link rel="stylesheet" href="css/owl.carousel.css">
-<link rel="stylesheet" href="css/news.css">
+<link rel="stylesheet" href="css/homeP.css">
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/responsive.css" />
 <link rel="stylesheet" href="css/color-green.css" id="colors" />
 </head>
 
 <body>
-<script>
-// 检查用户是否已登录
-const userInfo = localStorage.getItem('userInfo');
-if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
-    // 如果未登录，跳转到登录页面
-    window.location.href = 'login.html';
-}
-</script>
 
 <div class="preloader">
 	<div class="status"></div>
@@ -59,9 +51,13 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
 					<li class="active">
 						<a href="#clean-slider">首页</a>
 					</li>
+          <li class="active">
+						<a href="#intro">介绍</a>
+					</li>
 					<li class="active">
 						<a href="#news">环保新闻</a>
 					</li>
+          
 					<li>
 						<a href="#contact">联系我们</a>
 					</li>
@@ -153,8 +149,56 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
 	</div>
 </section>
 
+
+<section id="intro" class="clean-section-wrapper clean-intro-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12 clean-section-header wow fadeInDown">
+				<h1><span class="clean-color-contras">绿色平台介绍</span></h1>
+				<div class="clean-line"></div>
+				<p class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1">
+					我们致力于打造专业的绿色环保平台，让环保理念深入人心，让绿色生活触手可及
+				</p>
+			</div>
+			<div class="intro-content-wrapper col-md-12 wow fadeInUp" data-wow-delay="0.3s">
+				<div class="row">
+					<div class="col-md-6 col-sm-12 intro-video-container">
+						<div class="video-wrapper">
+							<img src="images/gif/3.gif" alt="绿色环保平台介绍" class="intro-gif">
+						</div>
+					</div>
+					
+					<div class="col-md-6 col-sm-12 intro-text-container">
+						<h3 class="intro-title">绿色环保平台 - 践行环保理念 共建绿色家园</h3>
+						<div class="intro-text">
+							<p>
+								绿色环保平台是国内领先的环保综合服务平台，自创立以来，我们始终秉承"绿水青山就是金山银山"的发展理念，
+								致力于连接环保资源、传播环保知识、推动环保实践，让每一个人都能轻松参与到环保行动中来。
+							</p>
+							<p>
+								我们的平台涵盖环保资讯、低碳出行、回收分类、环保社区、个人中心等多个核心板块，为用户提供全方位的环保服务：
+							</p>
+							<ul class="intro-features">
+								<li><i class="fa fa-leaf clean-color-contras"></i> 实时更新最新环保政策与行业动态，让您掌握前沿环保资讯</li>
+								<li><i class="fa fa-bicycle clean-color-contras"></i> 推广低碳出行方式，提供绿色出行规划与建议</li>
+								<li><i class="fa fa-recycle clean-color-contras"></i> 普及垃圾分类知识，提供智能分类查询与指导</li>
+								<li><i class="fa fa-users clean-color-contras"></i> 搭建环保社区交流平台，汇聚志同道合的环保爱好者</li>
+								<li><i class="fa fa-trophy clean-color-contras"></i> 记录个人环保行为，建立绿色积分激励机制</li>
+							</ul>
+							<p>
+								我们相信，每一个微小的环保行动，都能汇聚成改变世界的力量。加入我们，一起践行环保理念，
+								共同守护我们的地球家园，让绿色成为生活的底色，让环保成为一种生活方式。
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
 <!-- ===================================
-	新闻板块（完善后）
+	新闻板块
 ==================================== -->
 <section id="news" class="news-section">
   <div class="news-container">
@@ -164,7 +208,6 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
       <p>实时掌握最新环保动态，了解前沿的环保技术、政策和实践案例，共同推动绿色发展</p>
     </div>
 
-    <!-- 新闻分类导航 -->
     <div class="news-categories">
       <button class="category-btn active" data-category="environmental">环保类</button>
       <button class="category-btn" data-category="lowcarbon">低碳类</button>
@@ -174,19 +217,18 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
       <button class="category-btn" data-category="global">国际动态类</button>
     </div>
 
-    <!-- 热门新闻区域 -->
     <!-- 环保类热门新闻 -->
     <div class="hot-news active" id="hot-environmental">
       <div class="hot-news-img">
-        <img src="images/news/hot1.jpg" alt="全国生态环境保护大会召开">
+        <img src="images/news/6.jpg" alt="保护">
       </div>
       <div class="hot-news-content">
         <span class="hot-news-tag">热门</span>
-        <h3 class="hot-news-title">全国生态环境保护大会召开 部署新一轮环保攻坚任务</h3>
-        <p class="hot-news-desc">本次大会明确了未来5年生态环境保护的核心目标，提出要持续打好蓝天、碧水、净土保卫战，加快推动发展方式绿色转型，加强生态保护和修复，完善生态环境治理体系。</p>
+        <h3 class="hot-news-title">“荒野求生赛”为何屡被叫停？</h3>
+        <p class="hot-news-desc">近期，“荒野求生热”引发关注。随着选手出圈、热度不断攀升，不少地方争相推出此类赛事。不过，一些赛事接连被紧急叫停，这让人们思考：热潮背后，哪些问题值得警惕？</p>
         <div class="hot-news-meta">
-          <span>发布时间：2026-01-05</span>
-          <a href="news_detail.html?id=1" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
+          <span>发布时间：2026-01-06</span>
+          <a href="https://www.cenews.com.cn/news.html?aid=1761601" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
         </div>
       </div>
     </div>
@@ -194,15 +236,15 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <!-- 低碳类热门新闻 -->
     <div class="hot-news" id="hot-lowcarbon">
       <div class="hot-news-img">
-        <img src="images/news/hot2.jpg" alt="全国碳市场交易规模突破千亿">
+        <img src="images/news/2.png" alt="“碳”路向未来——我国加快推进经济社会绿色低碳转型">
       </div>
       <div class="hot-news-content">
         <span class="hot-news-tag">热门</span>
-        <h3 class="hot-news-title">全国碳市场交易规模突破千亿 低碳发展成效显著</h3>
-        <p class="hot-news-desc">截至2025年底，全国碳市场累计成交额突破1000亿元，覆盖控排企业超7000家，有效推动了重点行业节能降碳改造，为实现双碳目标奠定了坚实基础。</p>
+        <h3 class="hot-news-title">“碳”路向未来——我国加快推进经济社会绿色低碳转型</h3>
+        <p class="hot-news-desc">“碳路先锋、绿动未来”——6月25日，2025年“全国低碳日”主场活动在浙江杭州举行，充分展现我国应对气候变化的显著成效和生动实践。</p>
         <div class="hot-news-meta">
-          <span>发布时间：2026-01-08</span>
-          <a href="news_detail.html?id=2" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
+          <span>发布时间：2025-06-26</span>
+          <a href="https://www.xinhuanet.com/20250626/defdabc731f54ed187311e3675dad679/c.html" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
         </div>
       </div>
     </div>
@@ -210,15 +252,15 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <!-- 动物保护类热门新闻 -->
     <div class="hot-news" id="hot-animal">
       <div class="hot-news-img">
-        <img src="images/news/hot3.jpg" alt="长江江豚数量实现恢复性增长">
+        <img src="images/news/1.png" alt="保护药用濒危野生动物“野生动物友好医药网络”成立">
       </div>
       <div class="hot-news-content">
         <span class="hot-news-tag">热门</span>
-        <h3 class="hot-news-title">长江江豚数量实现恢复性增长 种群数量突破1200头</h3>
-        <p class="hot-news-desc">最新监测数据显示，长江江豚种群数量达到1249头，较2017年增长20.4%，这是长江十年禁渔政策实施以来取得的重要生态成果，标志着长江生态环境持续改善。</p>
+        <h3 class="hot-news-title">保护药用濒危野生动物“野生动物友好医药网络”成立</h3>
+        <p class="hot-news-desc">2024年8月29日，在健康中国医疗健康产业大会上，世界动物保护协会与健康报社共同发布“野生动物友好医药网络”，旨在推动医药企业、行业协会、研究机构、医生、专家等多方开展协作，探索生态友好的野生动物药材的人道替代解决方案，同时促进价值链企业参与野生动物保护的实践。</p>
         <div class="hot-news-meta">
-          <span>发布时间：2026-01-02</span>
-          <a href="news_detail.html?id=3" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
+          <span>发布时间：2025-06-23</span>
+          <a href="https://www.worldanimalprotection.org.cn/news-store/2024/wildlife-friendly-medicine-network-established-to-protect-endangered-wildlife-for-medicinal-purposes/" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
         </div>
       </div>
     </div>
@@ -226,15 +268,15 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <!-- 政策法规类热门新闻 -->
     <div class="hot-news" id="hot-policy">
       <div class="hot-news-img">
-        <img src="images/news/hot4.jpg" alt="新版固体废物污染环境防治法实施">
+        <img src="images/news/5.jpg" alt="中华人民共和国野生动物保护法" height="50px">
       </div>
       <div class="hot-news-content">
         <span class="hot-news-tag">热门</span>
-        <h3 class="hot-news-title">新版固体废物污染环境防治法实施 强化垃圾分类管理</h3>
-        <p class="hot-news-desc">新修订的固废法进一步明确了生产者责任延伸制度，加大了对违法处置固废行为的处罚力度，要求各地加快建立完善的垃圾分类收运处理体系。</p>
+        <h3 class="hot-news-title">中华人民共和国野生动物保护法</h3>
+        <p class="hot-news-desc">中华人民共和国野生动物保护法</p>
         <div class="hot-news-meta">
-          <span>发布时间：2026-01-04</span>
-          <a href="news_detail.html?id=4" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
+          <span>发布时间：2023-02-20</span>
+          <a href="https://www.mee.gov.cn/ywgz/fgbz/fl/202302/t20230220_1016885.shtml" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
         </div>
       </div>
     </div>
@@ -242,15 +284,15 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <!-- 技术创新类热门新闻 -->
     <div class="hot-news" id="hot-technology">
       <div class="hot-news-img">
-        <img src="images/news/hot5.jpg" alt="新能源电池回收技术取得突破">
+        <img src="images/news/3.png" alt="中国生态环境十大科技进展发布，生态环境领域高水平成果涌现">
       </div>
       <div class="hot-news-content">
         <span class="hot-news-tag">热门</span>
-        <h3 class="hot-news-title">新能源电池回收技术取得突破 回收率提升至98%</h3>
-        <p class="hot-news-desc">我国科研团队研发的新型动力电池回收工艺，实现了锂、钴、镍等关键金属98%的回收率，大幅降低了回收成本，为新能源产业闭环发展提供了技术支撑。</p>
+        <h3 class="hot-news-title">中国生态环境十大科技进展发布，生态环境领域高水平成果涌现</h3>
+        <p class="hot-news-desc">6月5日，中国科协生态环境产学联合体发布2024年度中国生态环境十大科技进展。本次发布的十大进展涉及气候变化、大模型预报系统、城市地面沉降机制、生态修复理论创新等生态环境领域的新理论、新技术，不仅代表了生态环境科技领域最新前沿成果，也具有巨大的转化潜力和应用价值。</p>
         <div class="hot-news-meta">
-          <span>发布时间：2026-01-07</span>
-          <a href="news_detail.html?id=5" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
+          <span>发布时间：2025-06-05</span>
+          <a href="https://news.qq.com/rain/a/20250605A08DS900" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
         </div>
       </div>
     </div>
@@ -258,83 +300,82 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <!-- 国际动态类热门新闻 -->
     <div class="hot-news" id="hot-global">
       <div class="hot-news-img">
-        <img src="images/news/hot6.jpg" alt="全球气候峰会达成新共识">
+        <img src="images/news/4.jpg" alt="全球环保新动向：各国联手应对气候变化，共同保护地球 ">
       </div>
       <div class="hot-news-content">
         <span class="hot-news-tag">热门</span>
-        <h3 class="hot-news-title">全球气候峰会达成新共识 190国承诺加速碳中和进程</h3>
-        <p class="hot-news-desc">第28届联合国气候大会上，190个国家签署了新的气候行动协议，承诺到2030年将全球碳排放再减少43%，并加大对发展中国家的气候资金支持。</p>
+        <h3 class="hot-news-title">全球环保新动向：各国联手应对气候变化，共同保护地球 </h3>
+        <p class="hot-news-desc">随着全球气候危机日益严峻，国际社会正以前所未有的力度携手应对气候变化，共同守护地球家园。2025年，全球环保领域呈现出三大核心动向，展现了人类命运共同体理念下的深度协作。</p>
         <div class="hot-news-meta">
-          <span>发布时间：2026-01-01</span>
-          <a href="news_detail.html?id=6" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
+          <span>发布时间：2025-04-21</span>
+          <a href="https://www.sohu.com/a/887211878_122255128" style="color: #28a745; text-decoration: none;">查看详情 <i class="fa fa-angle-right"></i></a>
         </div>
       </div>
     </div>
 
-    <!-- 新闻列表区域 -->
     <!-- 环保类新闻列表 -->
     <div class="news-list active" id="list-environmental">
       <div id="env-page-1" class="news-page active">
         <div class="news-item">
-          <a href="news_detail.html?id=101" class="news-item-title">多地出台新规 加强饮用水水源地保护</a>
+          <a href="https://www.cenews.com.cn/news.html?aid=1178044" class="news-item-title">把煤尘“罩”起来？供暖季来临，企业为什么这么做？</a>
           <span class="news-item-date">2026-01-09</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=102" class="news-item-title">城市黑臭水体治理成效显著 全国消除比例达98%</a>
+          <a href="https://www.cenews.com.cn/news.html?aid=1747674" class="news-item-title">一图读懂｜党的二十届四中全会公报</a>
+          <span class="news-item-date">2025-10-24</span>
+        </div>
+        <div class="news-item">
+          <a href="https://www.cenews.com.cn/news.html?aid=1762298" class="news-item-title">太原：以植代偿，荒地变公园</a>
+          <span class="news-item-date">2026-01-09</span>
+        </div>
+        <div class="news-item">
+          <a href="https://www.cenews.com.cn/news.html?aid=1762240" class="news-item-title">镇江：党旗飘扬在攻坚一线 绿色动能“满格”释放</a>
           <span class="news-item-date">2026-01-08</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=103" class="news-item-title">首个国家公园生态监测网络建成运行</a>
-          <span class="news-item-date">2026-01-07</span>
-        </div>
-        <div class="news-item">
-          <a href="news_detail.html?id=104" class="news-item-title">塑料污染治理专项行动启动 重点整治一次性塑料制品</a>
-          <span class="news-item-date">2026-01-06</span>
-        </div>
-        <div class="news-item">
-          <a href="news_detail.html?id=105" class="news-item-title">环保督察回头看 督促整改环境问题超1.2万个</a>
-          <span class="news-item-date">2026-01-05</span>
+          <a href="https://www.cenews.com.cn/news.html?aid=1762550" class="news-item-title">温州探索“地质技术+绿色公益”新路径</a>
+          <span class="news-item-date">2026-01-10</span>
         </div>
       </div>
       
       <div id="env-page-2" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=106" class="news-item-title">全国城市空气质量优良天数比例持续提升至87.5%</a>
+          <a href="https://www.mee.gov.cn/ywdt/spxw/202601/t20260104_1139726.shtml" class="news-item-title">《生态环境监测条例》1月1日起施行</a>
           <span class="news-item-date">2026-01-04</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=107" class="news-item-title">生态保护红线制度全面落地 守护国家生态安全</a>
-          <span class="news-item-date">2026-01-03</span>
+          <a href="https://www.mee.gov.cn/ywdt/spxw/202601/t20260106_1139995.shtml" class="news-item-title">新时代长江之歌：十年守护 见证绿色蝶变</a>
+          <span class="news-item-date">2026-01-06</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=108" class="news-item-title">农村人居环境整治提升行动取得阶段性成果</a>
-          <span class="news-item-date">2026-01-02</span>
+          <a href="https://www.mee.gov.cn/ywdt/spxw/202512/t20251223_1138485.shtml" class="news-item-title">第三轮第五批中央生态环境保护督察全面完成督察进驻阶段工作</a>
+          <span class="news-item-date">2025-12-23</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=109" class="news-item-title">重点流域水污染防治规划发布 精准治污提效能</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-01</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=110" class="news-item-title">环保产业规模突破2万亿元 成为经济新增长点</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-31</span>
         </div>
       </div>
       
       <div id="env-page-3" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=111" class="news-item-title">挥发性有机物治理专项行动启动 改善大气质量</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-30</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=112" class="news-item-title">全国土壤污染状况详查结果公布 治理修复提速</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-29</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=113" class="news-item-title">海洋生态保护修复工程实施 蓝色海湾焕新颜</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-28</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=114" class="news-item-title">环保科普进万家活动启动 提升全民环保意识</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-27</span>
         </div>
         <div class="news-item">
@@ -348,65 +389,65 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <div class="news-list" id="list-lowcarbon">
       <div id="low-page-1" class="news-page active">
         <div class="news-item">
-          <a href="news_detail.html?id=201" class="news-item-title">新能源汽车渗透率突破40% 低碳出行成主流</a>
-          <span class="news-item-date">2026-01-09</span>
+          <a href="https://www.mee.gov.cn/ywdt/spxw/202512/t20251202_1136934.shtml" class="news-item-title">推动绿色低碳发展 助力中国式现代化</a>
+          <span class="news-item-date">2025-12-02</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=202" class="news-item-title">首个零碳城市试点方案发布 打造低碳发展样板</a>
-          <span class="news-item-date">2026-01-08</span>
+          <a href="https://tv.cctv.com/2022/10/27/VIDEhdvkICn7BanjRmSiydIf221027.shtml" class="news-item-title">生态环境部 减污降碳协同增效 积极推进“双碳”工作</a>
+          <span class="news-item-date">2022-10-27</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=203" class="news-item-title">工业企业低碳改造补贴政策出台 最高补贴500万元</a>
-          <span class="news-item-date">2026-01-07</span>
+          <a href="https://tv.cctv.com/2023/03/12/VIDEJduRKtVxUfnKPdVbYIgM230312.shtml" class="news-item-title">持续改善生态环境 推动绿色低碳发展 继续推进经济社会绿色低碳转型</a>
+          <span class="news-item-date">2023-03-12</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=204" class="news-item-title">碳普惠平台上线 个人低碳行为可兑换奖励</a>
-          <span class="news-item-date">2026-01-06</span>
+          <a href="https://www.msn.cn/zh-cn/news/other/%E7%BB%BF-%E6%BD%AE%E6%B6%8C%E5%8A%A8-%E8%83%BD%E6%BA%90%E4%BD%8E%E7%A2%B3%E8%BD%AC%E5%9E%8B%E9%87%8A%E6%94%BE%E5%8F%91%E5%B1%95%E6%B4%BB%E5%8A%9B/ar-AA1TDy6Z?" class="news-item-title">“绿”潮涌动 能源低碳转型释放发展活力</a>
+          <span class="news-item-date">20xx-xx-xx</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=205" class="news-item-title">氢能产业发展规划发布 构建低碳能源体系</a>
-          <span class="news-item-date">2026-01-05</span>
+          <a href="https://www.msn.cn/zh-cn/%E6%8A%80%E6%9C%AF/%E9%80%9A%E7%94%A8/%E7%A7%91%E6%8A%80%E5%8A%A0%E6%8C%81%E8%AE%A9%E8%87%B4%E5%AF%8C%E6%9E%9C-%E7%94%9C-%E4%B8%8A%E5%8A%A0-%E5%80%BC-%E9%A2%9C%E5%80%BC%E5%85%B3-%E5%8F%A0%E5%8A%A0-%E4%BD%8E%E7%A2%B3%E5%85%B3-%E6%88%90%E4%B8%BA%E5%86%9C%E4%BA%A7%E5%93%81%E8%BF%87%E7%A1%AC%E7%AB%9E%E4%BA%89%E5%8A%9B/ar-AA1TYHB6?" class="news-item-title">科技加持让致富果“甜”上加“值” “颜值关”叠加“低碳关”成为农产品过硬竞争力</a>
+          <span class="news-item-date">20xx-xx-xx</span>
         </div>
       </div>
       
       <div id="low-page-2" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=206" class="news-item-title">建筑领域低碳标准出台 新建建筑需达绿建标准</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-04</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=207" class="news-item-title">低碳工业园区建设指南发布 推动产业绿色转型</a>
+          <a href=" class="news-item-title"></a>
           <span class="news-item-date">2026-01-03</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=208" class="news-item-title">交通领域碳达峰实施方案印发 推广绿色出行</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-02</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=209" class="news-item-title">农业低碳发展行动方案发布 减少农业碳排放</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-01</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=210" class="news-item-title">碳标签制度试点扩大 引导绿色消费</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-31</span>
         </div>
       </div>
       
       <div id="low-page-3" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=211" class="news-item-title">分布式光伏整县推进 助力县域低碳发展</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-30</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=212" class="news-item-title">绿色电力交易试点扩容 保障清洁能源消纳</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-29</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=213" class="news-item-title">低碳技术创新中心成立 攻克关键核心技术</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-28</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=214" class="news-item-title">企业低碳转型评价体系发布 引导绿色发展</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-27</span>
         </div>
         <div class="news-item">
@@ -420,65 +461,65 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <div class="news-list" id="list-animal">
       <div id="ani-page-1" class="news-page active">
         <div class="news-item">
-          <a href="news_detail.html?id=301" class="news-item-title">大熊猫野化放归取得新进展 累计放归超50只</a>
-          <span class="news-item-date">2026-01-09</span>
+          <a href="http://www.kepu.gov.cn/news/2025-05/22/content_343624.html" class="news-item-title">国际生物多样性日 | 我国200多种濒危动物“家族壮大”</a>
+          <span class="news-item-date">2025-05-22</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=302" class="news-item-title">野生动物保护法修订 加大对非法交易处罚力度</a>
-          <span class="news-item-date">2026-01-08</span>
+          <a href="https://www.worldanimalprotection.org.cn/news-store/2023/exotic-animals-need-to-be-regulated/" class="news-item-title">中央一号文件提出严厉打击非法引入外来物种行为—— “神奇动物”还需规范管理</a>
+          <span class="news-item-date">2025-06-23</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=303" class="news-item-title">藏羚羊种群数量恢复至30万只 保护等级下调</a>
-          <span class="news-item-date">2026-01-07</span>
+          <a href="https://www.cenews.com.cn/news.html?aid=1762629" class="news-item-title">鲍永清：展现祁连山不为人知的鲜活生命故事给世界</a>
+          <span class="news-item-date">2026-01-11</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=304" class="news-item-title">海洋生物多样性保护行动计划发布 守护蓝色家园</a>
-          <span class="news-item-date">2026-01-06</span>
+          <a href="https://finance.sina.com.cn/tjhz/2026-01-03/doc-inheyxtw8466345.shtml" class="news-item-title">保护野生动物，从有网感的科普开始</a>
+          <span class="news-item-date">2026-01-03</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=305" class="news-item-title">各地建立野生动物救助站 年救助动物超10万只</a>
-          <span class="news-item-date">2026-01-05</span>
+          <a href="https://news.qq.com/rain/a/20260101A05C0Y00" class="news-item-title">元旦南通迎来首场瑞雪，动物园珍稀白脸僧面猴喜添“新年宝宝</a>
+          <span class="news-item-date">2026-01-01</span>
         </div>
       </div>
       
       <div id="ani-page-2" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=306" class="news-item-title">候鸟保护专项行动启动 严厉打击非法猎捕行为</a>
-          <span class="news-item-date">2026-01-04</span>
+          <a href="https://hunan.ifeng.com/c/8phDqRrrD1e" class="news-item-title">科技护航，营养加码！长沙生态动物园为动物们撑起暖冬保护伞</a>
+          <span class="news-item-date">2026-01-06</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=307" class="news-item-title">穿山甲保护级别提升 专项保护行动全面展开</a>
-          <span class="news-item-date">2026-01-03</span>
+          <a href="https://news.cctv.com/2024/06/21/ARTIac0mW4wXjOqR2JGRyQwe240621.shtml" class="news-item-title">我国生物多样性丰富度上升 消失的野生动物重新出现</a>
+          <span class="news-item-date">2024-06-21</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=308" class="news-item-title">水生生物保护区禁渔效果显著 渔业资源恢复</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-02</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=309" class="news-item-title">野生动物肇事补偿机制完善 保障群众利益</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-01</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=310" class="news-item-title">濒危植物保护名录更新 新增保护物种120种</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-31</span>
         </div>
       </div>
       
       <div id="ani-page-3" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=311" class="news-item-title">生物多样性保护重大工程实施 守护生态安全</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-30</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=312" class="news-item-title">人工繁育野生动物管理办法修订 规范养殖行为</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-29</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=313" class="news-item-title">国际野生动物保护合作加强 打击跨境走私</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-28</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=314" class="news-item-title">自然保护地体系建设提速 保护面积持续扩大</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-27</span>
         </div>
         <div class="news-item">
@@ -492,65 +533,65 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <div class="news-list" id="list-policy">
       <div id="pol-page-1" class="news-page active">
         <div class="news-item">
-          <a href="news_detail.html?id=401" class="news-item-title">生态环境行政处罚办法修订 提高违法成本</a>
-          <span class="news-item-date">2026-01-09</span>
+          <a href="https://www.mee.gov.cn/ywgz/fgbz/fl/202012/t20201227_814985.shtml" class="news-item-title">中华人民共和国长江保护法</a>
+          <span class="news-item-date">20262-12-27</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=402" class="news-item-title">绿色金融改革创新试验区扩容 覆盖18个省市</a>
-          <span class="news-item-date">2026-01-08</span>
+          <a href="https://www.mee.gov.cn/ywgz/fgbz/fl/202303/t20230314_1019536.shtml" class="news-item-title">中华人民共和国生物安全法</a>
+          <span class="news-item-date">2020-10-17</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=403" class="news-item-title">环保信用评价管理办法出台 实施分级分类监管</a>
-          <span class="news-item-date">2026-01-07</span>
+          <a href="news_detail.html?id=403" class="news-item-title">十四届全国人大常委会第十七次会议审议多部法律草案</a>
+          <span class="news-item-date">2025-09-09</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=404" class="news-item-title">重点区域大气污染防治条例发布 强化联防联控</a>
-          <span class="news-item-date">2026-01-06</span>
+          <a href="https://www.moj.gov.cn/pub/sfbgw/zwgkztzl/xxxcgcxjpfzsx/fzsxllqy/202506/t20250606_520575.html" class="news-item-title">以生态环境法典开启环境法治新篇章</a>
+          <span class="news-item-date">2025-06-06</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=405" class="news-item-title">环境信息依法披露制度实施 保障公众知情权</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-05</span>
         </div>
       </div>
       
       <div id="pol-page-2" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=406" class="news-item-title">生态保护补偿条例公布 建立多元化补偿机制</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-04</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=407" class="news-item-title">排污许可管理条例实施 强化全过程监管</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-03</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=408" class="news-item-title">环境影响评价法修订 提升环评有效性</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-02</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=409" class="news-item-title">固废进口管理办法调整 严控洋垃圾入境</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-01</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=410" class="news-item-title">绿色采购制度完善 优先采购环保产品</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-31</span>
         </div>
       </div>
       
       <div id="pol-page-3" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=411" class="news-item-title">生态环境标准体系更新 新增20项环保标准</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-30</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=412" class="news-item-title">环境公益诉讼司法解释出台 保障环境权益</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-29</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=413" class="news-item-title">环保专项资金管理办法修订 提高资金使用效率</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-28</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=414" class="news-item-title">跨省流域生态保护补偿协议签署 共护流域生态</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-27</span>
         </div>
         <div class="news-item">
@@ -564,65 +605,65 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <div class="news-list" id="list-technology">
       <div id="tec-page-1" class="news-page active">
         <div class="news-item">
-          <a href="news_detail.html?id=501" class="news-item-title">二氧化碳捕集技术实现产业化 成本下降60%</a>
-          <span class="news-item-date">2026-01-09</span>
+          <a href="https://m.thepaper.cn/newsDetail_forward_30623141" class="news-item-title">国际环保展尽显科技创新，国产AI环境监测助力气候变化研究</a>
+          <span class="news-item-date">2025-04-11</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=502" class="news-item-title">生物降解塑料量产技术突破 性能接近传统塑料</a>
-          <span class="news-item-date">2026-01-08</span>
+          <a href="https://www.eco.gov.cn/news_info/64021.html" class="news-item-title">《科学通报》《环境科学与技术》连续报道我校环境化学领域最新研究进展</a>
+          <span class="news-item-date">2025-01-04</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=503" class="news-item-title">智能垃圾分类系统落地 识别准确率达99%</a>
-          <span class="news-item-date">2026-01-07</span>
+          <a href="https://www.gov.cn/zhengce/zhengceku/2022-11/02/content_5723769.htm" class="news-item-title">关于印发《“十四五”生态环境领域科技创新专项规划》的通知" class="news-item-title">中国式现代化既发展自身，又造福世界 ——2025年“读懂中国”国际会议综述</a>
+          <span class="news-item-date">2022-09-19</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=504" class="news-item-title">光伏建筑一体化技术升级 发电效率提升15%</a>
-          <span class="news-item-date">2026-01-06</span>
+          <a href="https://zhuanlan.zhihu.com/p/646333187" class="news-item-title">中国环保产业和科技创新的现状及环保产业科技创新存在的主要问题</a>
+          <span class="news-item-date">2026-xx-xx</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=505" class="news-item-title">水污染治理纳米材料研发成功 净化效率提升3倍</a>
-          <span class="news-item-date">2026-01-05</span>
+          <a href="https://paper.people.com.cn/zgnyb/html/2024-04/01/content_26050822.htm" class="news-item-title">生态环境部：我国生态环境领域科技创新持续加强</a>
+          <span class="news-item-date">2024-04-01</span>
         </div>
       </div>
       
       <div id="tec-page-2" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=506" class="news-item-title">智能环保监测系统上线 实现实时数据预警</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-04</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=507" class="news-item-title">生物质能高效利用技术突破 转化率提升至85%</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-03</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=508" class="news-item-title">大气污染精准溯源技术应用 提升治污精准度</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-02</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=509" class="news-item-title">固废资源化利用技术创新 变废为宝提效益</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-01</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=510" class="news-item-title">氢能储运技术取得突破 降低储运成本40%</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-31</span>
         </div>
       </div>
       
       <div id="tec-page-3" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=511" class="news-item-title">碳足迹核算技术标准化 助力企业低碳管理</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-30</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=512" class="news-item-title">海洋垃圾清理机器人研发成功 提升清理效率</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-29</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=513" class="news-item-title">环保新材料研发应用 替代传统高污染材料</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-28</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=514" class="news-item-title">AI环保监测系统落地 实现全天候智能监控</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-27</span>
         </div>
         <div class="news-item">
@@ -636,65 +677,65 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
     <div class="news-list" id="list-global">
       <div id="glo-page-1" class="news-page active">
         <div class="news-item">
-          <a href="news_detail.html?id=601" class="news-item-title">欧盟碳边境税正式实施 影响全球贸易格局</a>
-          <span class="news-item-date">2026-01-09</span>
+          <a href="https://www.eco.gov.cn/news_info/63975.html" class="news-item-title">全球变暖，亚马孙雨林会进入“超级热带时代”吗</a>
+          <span class="news-item-date">2025-12-22</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=602" class="news-item-title">全球可再生能源投资首次超过化石能源</a>
-          <span class="news-item-date">2026-01-08</span>
+          <a href="https://www.eco.gov.cn/news_info/64021.html" class="news-item-title">2025年可能为英国有记录以来最热年份</a>
+          <span class="news-item-date">2025-12-25</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=603" class="news-item-title">东南亚六国签署区域环保合作协议</a>
-          <span class="news-item-date">2026-01-07</span>
+          <a href="https://www.eco.gov.cn/news_info/63764.html" class="news-item-title">中国式现代化既发展自身，又造福世界 ——2025年“读懂中国”国际会议综述</a>
+          <span class="news-item-date">20265-12-03</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=604" class="news-item-title">联合国发布全球生态环境状况报告 形势依然严峻</a>
-          <span class="news-item-date">2026-01-06</span>
+          <a href="https://news.qq.com/rain/a/20250307A08PHH00" class="news-item-title">关注丨三年来政府报告中的“环保”脉络与走向</a>
+          <span class="news-item-date">2025-03-07</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=605" class="news-item-title">非洲绿色长城计划取得进展 荒漠化得到遏制</a>
-          <span class="news-item-date">2026-01-05</span>
+          <a href="https://www.sohu.com/a/861487602_121123737" class="news-item-title">2025年环保行业高级趋势展望‌-预计到2026年，中国环保产业营业收入有望达到2.5万亿元‌</a>
+          <span class="news-item-date">2025-02-20</span>
         </div>
       </div>
       
       <div id="glo-page-2" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=606" class="news-item-title">全球塑料公约谈判取得突破 2026年将达成最终协议</a>
-          <span class="news-item-date">2026-01-04</span>
+          <a href="https://www.sohu.com/a/887202318_122255128" class="news-item-title">全球环保产业发展现状与趋势分析，展望未来发展方向 </a>
+          <span class="news-item-date">2025-04-21</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=607" class="news-item-title">G20气候与能源部长会议达成共识 加速能源转型</a>
-          <span class="news-item-date">2026-01-03</span>
+          <a href="https://www.gepresearch.com/80/view-777536-1.html" class="news-item-title">全球及中国环保产业发展趋势洞察报告（2025年）</a>
+          <span class="news-item-date">2025-05-03</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=608" class="news-item-title">亚太地区碳中和合作论坛召开 共促绿色发展</a>
-          <span class="news-item-date">2026-01-02</span>
+          <a href="https://i.ifeng.com/c/8jt1hMOqfEk" class="news-item-title">全球环保产业新纪元与中国实践</a>
+          <span class="news-item-date">2025-06-03</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=609" class="news-item-title">全球环境基金增资完成 总额达93亿美元</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2026-01-01</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=610" class="news-item-title">北极生态保护国际合作加强 应对气候变暖</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-31</span>
         </div>
       </div>
       
       <div id="glo-page-3" class="news-page">
         <div class="news-item">
-          <a href="news_detail.html?id=611" class="news-item-title">拉美国家签署亚马逊雨林保护新协议</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-30</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=612" class="news-item-title">全球绿色债券发行规模突破5000亿美元</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-29</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=613" class="news-item-title">国际海事组织通过船舶减排新规 2050年实现零碳</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-28</span>
         </div>
         <div class="news-item">
-          <a href="news_detail.html?id=614" class="news-item-title">全球环保技术创新联盟成立 共享先进技术</a>
+          <a href="" class="news-item-title"></a>
           <span class="news-item-date">2025-12-27</span>
         </div>
         <div class="news-item">
@@ -744,9 +785,6 @@ if (!userInfo || !JSON.parse(userInfo).isLoggedIn) {
 </section>
 
 
-<!-- ===================================
-	TESTIMONIALS SECTION
-==================================== -->
 <section id="testimonial"  class="clean-testimonial-section background-two">
 
 	<div class="clean-parallax-overlay"></div>

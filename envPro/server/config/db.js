@@ -1,139 +1,249 @@
-// 环境变量已经在index.js中加载
-console.log('🔍 db.js正在执行，POSTGRES_URL:', process.env.POSTGRES_URL);
+// 引入pg库用于直接连接PostgreSQL数据库
+const { Pool } = require('pg');
 
-// 检查是否配置了POSTGRES_URL环境变量
-if (process.env.POSTGRES_URL) {
-  // 生产环境：使用真实的Supabase PostgreSQL连接池
-  const { Pool } = require('pg');
-  
-  const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-    ssl: { rejectUnauthorized: false } // Supabase必须加这行
-  });
+// PostgreSQL连接配置（直接写死，不再依赖环境变量）
+const POSTGRES_URL = 'postgresql://postgres:n7mMOZcLilnsfxq9@db.cvpjfjpcwyujcnwmnpci.supabase.co:5432/postgres';
 
-  // 测试连接并创建表（适配Supabase的UUID主键）
-  pool.connect((err, client, release) => {
+// 【关键修改1】删除环境变量校验（避免报错）
+// 注释掉这部分：if (!POSTGRES_URL) { throw new Error('POSTGRES_URL环境变量未设置'); }
+
+// 创建数据库连接池
+console.log('正在创建PostgreSQL连接池...');
+console.log(`PostgreSQL URL: ${POSTGRES_URL}`);
+
+const pool = new Pool({
+  connectionString: POSTGRES_URL,
+  ssl: {
+    rejectUnauthorized: false // 忽略SSL证书验证
+  }
+});
+
+// 【关键修改2】新增poolPromise（适配app.js和user.js的await poolPromise调用）
+const poolPromise = new Promise((resolve, reject) => {
+  pool.connect((err, client, done) => {
     if (err) {
-      console.error('❌ PostgreSQL连接失败：', err.message);
-      console.info('💡 请检查：1.POSTGRES_URL是否正确 2.Supabase数据库是否启动 3.网络是否能访问Supabase');
-      return; // 不再抛出错误，允许服务继续运行
+      console.error('数据库连接池初始化失败:', err.stack);
+      reject(err);
+    } else {
+      console.log('数据库连接池初始化成功');
+      done(); // 释放临时连接
+      resolve(pool);
     }
-    console.log('✅ PostgreSQL连接成功！');
-
-    // 创建用户表（适配你的注册页面字段，用UUID主键，首次启动自动创建）
-    const createUserTable = `
-      -- 先创建UUID扩展（Supabase需要）
-      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-      
-      -- 创建用户表（不存在则创建）
-      CREATE TABLE IF NOT EXISTS users (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- 适配Supabase的UUID
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        nickname TEXT DEFAULT '',
-        email TEXT UNIQUE, -- 邮箱唯一
-        phone TEXT UNIQUE, -- 手机号唯一
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 自动记录创建时间
-      )
-    `;
-    client.query(createUserTable, (err) => {
-      release(); // 释放连接
-      if (err) console.warn('⚠️ 用户表已存在或创建失败：', err.message);
-      else console.log('✅ 用户表创建/验证成功！');
-    });
   });
-  
-  // 导出真实连接池
-  module.exports = { pool };
-} else {
-  // 开发环境：使用模拟的连接池（保留原有逻辑，适配新字段）
-  console.warn('⚠️ 未配置POSTGRES_URL环境变量，将使用模拟数据进行开发。');
-  console.info('💡 在生产环境部署时，请设置POSTGRES_URL环境变量以连接真实的PostgreSQL数据库。');
-  
-  // 模拟数据存储
-  let mockUsers = [];
-  let nextId = 1;
-  
-  // 模拟连接池
-  const mockPool = {
-    async query(sql, params) {
-      // 模拟SELECT 1 + 1
-      if (sql === 'SELECT 1 + 1 AS result') {
-        return { rows: [{ result: 2 }] };
-      }
-      
-      // 模拟注册用户（适配新字段：email/phone唯一）
-      if (sql.includes('INSERT INTO users')) {
-        const [username, password, nickname, email, phone] = params;
-        
-        // 检查用户名/邮箱/手机号是否已存在
-        if (mockUsers.some(user => user.username === username)) {
-          throw new Error('duplicate key value violates unique constraint "users_username_key"');
-        }
-        if (email && mockUsers.some(user => user.email === email)) {
-          throw new Error('duplicate key value violates unique constraint "users_email_key"');
-        }
-        if (phone && mockUsers.some(user => user.phone === phone)) {
-          throw new Error('duplicate key value violates unique constraint "users_phone_key"');
-        }
-        
-        // 创建新用户
-        const newUser = {
-          id: nextId++,
-          username,
-          password,
-          nickname: nickname || '',
-          email: email || null,
-          phone: phone || null,
-          created_at: new Date().toISOString()
+});
+
+// 创建一个模拟Supabase客户端的对象，提供与原来相同的接口
+const supabase = {
+  from: (tableName) => {
+    return {
+      // 查询方法
+      select: (columns) => {
+        // 基本查询对象，支持order方法（无条件查询）
+        const baseQuery = {
+          order: (field, options) => {
+            // 执行无条件排序查询
+            return new Promise(async (resolve, reject) => {
+              try {
+                const orderDirection = options.ascending ? 'ASC' : 'DESC';
+                const query = `SELECT ${columns} FROM ${tableName} ORDER BY ${field} ${orderDirection}`;
+                const { rows } = await pool.query(query);
+                resolve({ data: rows, error: null });
+              } catch (err) {
+                resolve({ data: null, error: err });
+              }
+            });
+          }
         };
         
-        mockUsers.push(newUser);
+        // 添加eq方法支持
+        baseQuery.eq = (column, value) => {
+          return {
+            limit: (limit) => {
+              // 执行带条件的查询
+              return new Promise(async (resolve, reject) => {
+                try {
+                  const query = `SELECT ${columns} FROM ${tableName} WHERE ${column} = $1 LIMIT ${limit}`;
+                  const { rows } = await pool.query(query, [value]);
+                  resolve({ data: rows, error: null });
+                } catch (err) {
+                  resolve({ data: null, error: err });
+                }
+              });
+            },
+            order: (field, options) => {
+              // 执行带条件的排序查询
+              return new Promise(async (resolve, reject) => {
+                try {
+                  const orderDirection = options.ascending ? 'ASC' : 'DESC';
+                  const query = `SELECT ${columns} FROM ${tableName} WHERE ${column} = $1 ORDER BY ${field} ${orderDirection}`;
+                  const { rows } = await pool.query(query, [value]);
+                  resolve({ data: rows, error: null });
+                } catch (err) {
+                  resolve({ data: null, error: err });
+                }
+              });
+            },
+            // 添加single属性支持（适配Supabase 2.0+）
+            single: new Promise(async (resolve, reject) => {
+              try {
+                const query = `SELECT ${columns} FROM ${tableName} WHERE ${column} = $1 LIMIT 1`;
+                const { rows } = await pool.query(query, [value]);
+                resolve({ data: rows[0] || null, error: null });
+              } catch (err) {
+                resolve({ data: null, error: err });
+              }
+            })
+          };
+        };
         
-        return { 
-          rows: [{ 
-            id: newUser.id, 
-            username: newUser.username, 
-            nickname: newUser.nickname, 
-            email: newUser.email, 
-            phone: newUser.phone,
-            created_at: newUser.created_at
-          }] 
+        return baseQuery;
+      },
+      // 插入方法
+      insert: (dataArray) => {
+        return {
+          select: (columns) => {
+            return new Promise(async (resolve, reject) => {
+              try {
+                // 处理批量插入
+                if (!Array.isArray(dataArray)) {
+                  dataArray = [dataArray];
+                }
+                
+                // 获取列名
+                const keys = Object.keys(dataArray[0]);
+                const columnNames = keys.join(', ');
+                
+                // 构建值的占位符和参数
+                const placeholders = dataArray.map((_, rowIndex) => {
+                  return '(' + keys.map((_, colIndex) => `$${rowIndex * keys.length + colIndex + 1}`).join(', ') + ')';
+                }).join(', ');
+                
+                // 构建参数数组
+                const params = [];
+                dataArray.forEach(data => {
+                  params.push(...Object.values(data));
+                });
+                
+                // 执行插入查询
+                const query = `INSERT INTO ${tableName} (${columnNames}) VALUES ${placeholders} RETURNING ${columns}`;
+                const { rows } = await pool.query(query, params);
+                
+                resolve({ data: rows, error: null });
+              } catch (err) {
+                console.error('插入数据错误:', err);
+                resolve({ data: null, error: err });
+              }
+            });
+          }
+        };
+      },
+      // 更新方法
+      update: (updateData) => {
+        return {
+          eq: (column, value) => {
+            return {
+              select: (columns) => {
+                return new Promise(async (resolve, reject) => {
+                  try {
+                    // 获取更新的列名和值
+                    const keys = Object.keys(updateData);
+                    const columnUpdates = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
+                    
+                    // 构建参数数组
+                    const params = Object.values(updateData);
+                    params.push(value); // 添加WHERE条件的值
+                    
+                    // 处理columns参数，为空时返回所有列
+                    const returnColumns = columns ? columns : '*';
+                    
+                    // 执行更新查询
+                    const query = `UPDATE ${tableName} SET ${columnUpdates} WHERE ${column} = $${params.length} RETURNING ${returnColumns}`;
+                    const { rows } = await pool.query(query, params);
+                    
+                    resolve({ data: rows, error: null });
+                  } catch (err) {
+                    console.error('更新数据错误:', err);
+                    resolve({ data: null, error: err });
+                  }
+                });
+              },
+              limit: (limit) => {
+                return {
+                  select: (columns) => {
+                    return new Promise(async (resolve, reject) => {
+                      try {
+                        // 获取更新的列名和值
+                        const keys = Object.keys(updateData);
+                        const columnUpdates = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
+                        
+                        // 构建参数数组
+                        const params = Object.values(updateData);
+                        params.push(value); // 添加WHERE条件的值
+                        
+                        // 处理columns参数，为空时返回所有列
+                        const returnColumns = columns ? columns : '*';
+                        
+                        // 执行更新查询
+                        const query = `UPDATE ${tableName} SET ${columnUpdates} WHERE ${column} = $${params.length} LIMIT ${limit} RETURNING ${returnColumns}`;
+                        const { rows } = await pool.query(query, params);
+                        
+                        resolve({ data: rows, error: null });
+                      } catch (err) {
+                        console.error('更新数据错误:', err);
+                        resolve({ data: null, error: err });
+                      }
+                    });
+                  }
+                };
+              }
+            };
+          }
+        };
+      },
+      // 删除方法
+      delete: () => {
+        return {
+          eq: (column, value) => {
+            return new Promise(async (resolve, reject) => {
+              try {
+                // 执行删除查询
+                const query = `DELETE FROM ${tableName} WHERE ${column} = $1`;
+                const { rows } = await pool.query(query, [value]);
+                
+                resolve({ data: rows, error: null });
+              } catch (err) {
+                console.error('删除数据错误:', err);
+                resolve({ data: null, error: err });
+              }
+            });
+          }
         };
       }
-      
-      // 模拟查询用户（按用户名）
-      if (sql.includes('SELECT * FROM users WHERE username = $1')) {
-        const [username] = params;
-        const user = mockUsers.find(user => user.username === username);
-        return { rows: user ? [user] : [] };
-      }
-      
-      // 模拟检查用户名是否存在
-      if (sql.includes('SELECT * FROM users WHERE username = $1')) {
-        const [username] = params;
-        const exists = mockUsers.some(user => user.username === username);
-        return { rows: exists ? [{}] : [] };
-      }
-      
-      // 模拟检查邮箱是否存在
-      if (sql.includes('SELECT * FROM users WHERE email = $1')) {
-        const [email] = params;
-        const exists = mockUsers.some(user => user.email === email);
-        return { rows: exists ? [{}] : [] };
-      }
-      
-      // 模拟检查手机号是否存在
-      if (sql.includes('SELECT * FROM users WHERE phone = $1')) {
-        const [phone] = params;
-        const exists = mockUsers.some(user => user.phone === phone);
-        return { rows: exists ? [{}] : [] };
-      }
-      
-      throw new Error(`未实现的SQL查询: ${sql}`);
-    }
-  };
-  
-  // 导出模拟连接池
-  module.exports = { pool: mockPool };
+    };
+  }
+};
+
+// 测试数据库连接
+async function testConnection() {
+  try {
+    console.log('正在测试PostgreSQL连接...');
+    
+    // 尝试执行一个简单的查询来测试连接
+    const { rows } = await pool.query('SELECT NOW()');
+    
+    console.log('PostgreSQL连接成功！');
+    console.log('当前时间:', rows[0].now);
+    return supabase;
+  } catch (err) {
+    console.error('PostgreSQL连接测试失败：', JSON.stringify(err, null, 2));
+    return null;
+  }
 }
+
+// 【关键修改3】补充poolPromise导出（适配app.js和user.js）
+module.exports = {
+  supabase,
+  testConnection,
+  pool, // 导出原始的pool对象
+  poolPromise // 新增导出poolPromise
+};

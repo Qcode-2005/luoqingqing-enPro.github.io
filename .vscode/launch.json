@@ -15,43 +15,43 @@
             "type": "msedge",
             "request": "launch",
             "name": "Open index.html",
-            "file": "d:\\web比赛\\enPro\\envPro\\index.html"
+            "file": "d:\\web比赛\\fzhu\\enPro\\envPro\\index.html"
         },
          {
             "type": "msedge",
             "request": "launch",
             "name": "Open comm.html",
-            "file": "d:\\web比赛\\enPro\\envPro\\comm.html"
+            "file": "d:\\web比赛\\fzhu\\enPro\\envPro\\comm.html"
         },
          {
             "type": "msedge",
             "request": "launch",
             "name": "Open infor.html",
-            "file": "d:\\web比赛\\enPro\\envPro\\infor.html"
+            "file": "d:\\web比赛\\fzhu\\enPro\\envPro\\infor.html"
         },
          {
             "type": "msedge",
             "request": "launch",
             "name": "Open concept.html",
-            "file": "d:\\web比赛\\enPro\\envPro\\concept.html"
+            "file": "d:\\web比赛\\fzhu\\enPro\\envPro\\concept.html"
         },
          {
             "type": "msedge",
             "request": "launch",
             "name": "Open lc.html",
-            "file": "d:\\web比赛\\enPro\\envPro\\lc.html"
+            "file": "d:\\web比赛\\fzhu\\enPro\\envPro\\lc.html"
         },
          {
             "type": "msedge",
             "request": "launch",
             "name": "Open recycle.html",
-            "file": "d:\\web比赛\\enPro\\envPro\\recycle.html"
+            "file": "d:\\web比赛\\fzhu\\enPro\\envPro\\recycle.html"
         },
         {
             "type": "msedge",
             "request": "launch",
             "name": "Open login.html",
-            "file": "d:\\web比赛\\enPro\\envPro\\login.html"
+            "file": "d:\\web比赛\\fzhu\\enPro\\envPro\\login.html"
         }
     ]
 }

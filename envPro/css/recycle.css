@@ -6,7 +6,6 @@
         padding: 0 15px;
     }
     
-    /* 左侧按钮栏 */
     .recycle-sidebar {
         width: 200px;
         flex-shrink: 0;
@@ -261,5 +260,54 @@
         
         .recycle-materials {
             grid-template-columns: 1fr;
+        }
+    }
+    .core-content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 15px;
+        box-sizing: border-box;
+        min-height: calc(100vh - 300px); 
+    }
+    
+    .recycle-main-container {
+        display: flex;
+        gap: 20px;
+        width: 100%;
+        margin-bottom: 40px; 
+    }
+    
+    .recycle-sidebar {
+        width: 200px;
+        flex-shrink: 0;
+    }
+    
+    .recycle-content {
+        flex: 1;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    footer.background-two {
+        clear: both;
+        width: 100%;
+        padding: 40px 0;
+        margin-top: 50px; 
+        border-top: 1px solid #eee; 
+    }
+    
+    @media (max-width: 768px) {
+        .recycle-main-container {
+            flex-direction: column;
+        }
+        .recycle-sidebar {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .core-content-container {
+            padding: 20px 15px;
+            min-height: calc(100vh - 250px);
         }
     }

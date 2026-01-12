@@ -1,38 +1,10 @@
-// enPro/index.js - 后端入口文件
-const dotenv = require('dotenv');
-const result = dotenv.config({ path: './envPro/server/config/.env' });
-console.log('Environment variables loaded:', result.parsed);
-console.log('POSTGRES_URL:', process.env.POSTGRES_URL);
+// 项目主入口文件
+// 直接在代码中设置环境变量以禁用SSL证书验证
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3001;
-// 1. 解决跨域（前端调用后端接口不会报错）
-const cors = require('cors');
-app.use(cors());
+// 加载环境变量
+require('dotenv').config({ path: '.env.local' });
+const app = require('./envPro/server/config/app');
 
-// 2. 解析前端传的JSON/表单数据
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// 3. 托管静态文件（让前端页面能被访问）
-// 前端文件都在envPro目录下，所以托管envPro目录
-app.use(express.static('envPro'));
-
-// 4. 引入数据库配置和路由
-const { pool } = require('./envPro/server/config/db.js');
-const userRoutes = require('./envPro/server/config/routes/user.js');
-
-// 5. 使用用户路由
-app.use('/api/user', userRoutes);
-
-// 6. 健康检查接口（验证后端是否启动）
-app.get('/', (req, res) => {
-  res.send('✅ 后端服务已启动！');
-});
-
-// 7. 启动后端服务
-app.listen(port, () => {
-  console.log(`✅ 后端服务运行在端口：${port}`);
-  console.log(`🔗 本地访问地址：http://localhost:${port}`);
-});
+// 显式打印启动日志，方便Vercel日志排查
+console.log('后端服务已加载并启动');

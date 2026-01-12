@@ -661,3 +661,23 @@ h1, h2, h3, h4, h5, h6, figure {
                 height: 400px;
             }
         }
+
+        /* 实时验证提示信息样式 */
+        .validation-message {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            padding: 3px 5px;
+        }
+
+        .validation-message.valid {
+            color: #2e7d32;
+            background-color: rgba(46, 125, 50, 0.1);
+            border-radius: 3px;
+        }
+
+        .validation-message.invalid {
+            color: #d32f2f;
+            background-color: rgba(211, 47, 47, 0.1);
+            border-radius: 3px;
+        }

@@ -1,24 +1,10 @@
-const dotenv = require('dotenv');
-// 加载环境变量
-const fs = require('fs');
-const path = require('path');
-const envPath = path.join(__dirname, '.env');
-console.log('尝试加载的.env文件路径:', envPath);
-console.log('.env文件是否存在:', fs.existsSync(envPath));
-const result = dotenv.config({ path: envPath });
-if (result.error) {
-  console.error('❌ 加载.env文件失败:', result.error);
-}
-
 const express = require('express');
 const app = express();
-// 使用Vercel的环境端口，本地默认3000
+// 关键修改1：使用Vercel的环境端口，本地默认3000
 const port = process.env.PORT || 3000; 
-console.log('当前环境变量:', process.env);
-console.log('POSTGRES_URL:', process.env.POSTGRES_URL);
 
-// 引入数据库配置（适配你的db.js导出的pool）
-const { pool } = require('./db'); // 关键修改：用pool而非poolPromise
+// 引入Supabase配置
+const { supabase, testConnection } = require('./db');
 
 // 解决跨域问题（前端调用后端接口必须配置）
 const cors = require('cors');
@@ -28,35 +14,73 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 配置文件上传中间件
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// 创建uploads目录（如果不存在）
+const uploadDir = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// 配置multer存储
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'image-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+// 创建上传实例
+const upload = multer({ 
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB限制
+    },
+    fileFilter: (req, file, cb) => {
+        // 只允许图片文件
+        const filetypes = /jpeg|jpg|png|gif/;
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        
+        if (mimetype && extname) {
+            return cb(null, true);
+        }
+        cb(new Error('只允许上传图片文件（jpeg, jpg, png, gif）'));
+    }
+});
+
+// 使upload实例可用于路由
+app.locals.upload = upload;
+
+// 静态文件服务：提供uploads目录下的文件访问
+app.use('/uploads', express.static(uploadDir));
+
 // 引入路由
 const userRouter = require('./routes/user');
+const postRouter = require('./routes/post');
 
-// 挂载路由（前缀/api/user，前端调用时要加这个前缀）
-app.use('/api/user', userRouter);      
+// 挂载路由
+app.use('/api/user', userRouter);       // 前缀/api/user
+app.use('/api/post', postRouter);       // 前缀/api/post
 
-// 托管项目根目录下的静态文件（比如login.html、index.html）
-app.use(express.static('.')); 
+// 直接启动服务，不在启动时强制要求Supabase连接成功
+// 连接问题将在实际请求处理中捕获和处理
+// 新增：托管项目根目录下的静态文件（比如login.html、index.html）
+app.use(express.static('.')); // 表示托管当前项目根目录下的所有文件
 
-// 启动服务（无需等待poolPromise，适配原db.js的连接逻辑）
-// 先验证数据库是否能正常查询，再启动服务
-pool.query('SELECT 1 + 1 AS result')
-  .then(() => {
-    console.log('✅ 数据库连接成功！');
-    // 启动服务
-    app.listen(port, () => {
-      console.log(`✅ 后端服务运行在端口：${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error('❌ 数据库连接失败，无法启动服务:', err.message);
-    // 不强制退出，允许用模拟数据运行（保留原db.js的友好特性）
-    console.warn('⚠️ 将使用模拟数据启动服务（仅开发环境）');
-    app.listen(port, () => {
-      console.log(`✅ 后端服务运行在端口：${port}（模拟数据模式）`);
-    });
-  });
+app.listen(port, () => {
+  // 关键修改2：日志输出适配Vercel，去掉localhost
+  console.log(`后端服务运行在端口：${port}`);
+  console.log('✅ 服务已启动，Supabase连接将在实际请求时验证');
+});
 
-// 健康检查接口（方便测试部署是否成功）
+// 新增：健康检查接口（方便测试Vercel部署是否成功）
 app.get('/', (req, res) => {
-  res.send('✅ 后端服务已正常启动！可访问 /api/user/register 测试注册接口');
+  res.send('✅ 后端服务已正常启动！可访问 /api/user 测试接口');
 });
