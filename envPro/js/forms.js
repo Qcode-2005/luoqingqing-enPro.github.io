@@ -310,6 +310,17 @@ $(document).ready(function() {
     $('#signup-username').on('input', function() {
         const username = $(this).val();
         const validationElement = $('#username-validation');
+        
+        // 先验证用户名长度
+        if (username.length < 3) {
+            validationElement.text('用户名不能少于3个字符').removeClass('valid').addClass('invalid');
+            return;
+        } else if (username.length > 50) {
+            validationElement.text('用户名不能超过50个字符').removeClass('valid').addClass('invalid');
+            return;
+        }
+        
+        // 长度符合要求时检查唯一性
         checkFieldExistence('username', username, validationElement);
     });
     

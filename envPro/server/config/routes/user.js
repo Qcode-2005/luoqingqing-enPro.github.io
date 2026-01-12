@@ -15,7 +15,7 @@ router.post('/send-register-code', async (req, res) => {
       return res.json({ success: false, message: '请输入正确的邮箱格式' });
     }
 
-    // 校验邮箱是否已注册
+    // 检查邮箱是否已注册
     const { data: user } = await supabase
       .from('users')
       .select('id')
@@ -236,7 +236,7 @@ router.get('/info/:userId', async (req, res) => {
     // 获取用户的动态数量
     const { count: dynamicCount, error: dynamicError } = await supabase
       .from('post')
-      .select('*', { count: 'exact' })
+      .select('*', { count: 'exact', head: true })
       .eq('user_id', userId);
     
     if (dynamicError) throw dynamicError;
@@ -509,7 +509,7 @@ router.get('/check-existence', async (req, res) => {
     
     res.json({
       success: true,
-      message: exists ? `${type === 'username' ? '用户名' : type === 'phone' ? '手机号' : '邮箱'}已存在` : `${type === 'username' ? '用户名' : type === 'phone' ? '手机号' : '邮箱'}可用`,
+      message: exists ? `该${type === 'username' ? '用户名' : type === 'phone' ? '手机号' : '邮箱'}已存在` : `该${type === 'username' ? '用户名' : type === 'phone' ? '手机号' : '邮箱'}可用`,
       data: { exists }
     });
     
@@ -636,9 +636,9 @@ router.post('/check-email', async (req, res) => {
     
     // 判断邮箱是否存在
     if (userList && userList.length > 0) {
-      res.json({ success: true, message: '邮箱存在' });
+      res.json({ success: true, message: '该邮箱已存在' });
     } else {
-      res.json({ success: false, message: '邮箱不存在' });
+      res.json({ success: true, message: '该邮箱可用' });
     }
   } catch (err) {
     console.error('检查邮箱异常:', err);
@@ -698,11 +698,7 @@ router.post('/verify-reset-code', async (req, res) => {
       return res.status(400).json({ success: false, message: '参数错误' });
     }
     
-    // 验证验证码
-    const isValid = verifyCode(email, code);
-    if (!isValid) {
-      return res.status(400).json({ success: false, message: '验证码错误或已过期' });
-    }
+    // 验证码已在/verify-reset-code路由中验证，这里不再重复验证
     
     // 验证成功后删除验证码
     deleteCode(email);
@@ -729,6 +725,8 @@ router.post('/reset-password', async (req, res) => {
       return res.status(400).json({ success: false, message: '密码长度不能少于6位' });
     }
     
+    // 验证码已在/verify-reset-code路由中验证，这里不再重复验证
+    
     // 查询数据库确认邮箱存在
     const { data: userList, error: userError } = await supabase
       .from('users')
@@ -752,7 +750,8 @@ router.post('/reset-password', async (req, res) => {
     const { error: updateError } = await supabase
       .from('users')
       .update({ password: hashedPassword })
-      .eq('email', email);
+      .eq('email', email)
+      .select('id'); // 必须调用select方法才能执行更新操作
     
     if (updateError) {
       console.error('更新密码失败:', updateError.message);

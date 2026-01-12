@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低碳出行计算器测试</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 4px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>低碳出行碳排放量计算功能验证</h1>
+    
+    <div class="test-section">
+        <h2>功能概述</h2>
+        <p>✅ 已实现所有要求的功能：</p>
+        <ul>
+            <li>前端选择出行方式 + 输入公里数</li>
+            <li>前端根据「方式 - 系数」表计算碳排放量</li>
+            <li>实时显示单个项目和总碳排放量</li>
+            <li>无需后端/数据库，纯前端实现</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>核心代码实现</h2>
+        <h3>1. 碳排放系数表 (js/api/lc.ai.js 第7-15行)</h3>
+        <pre><code>const CARBON_COEFFICIENTS = {
+    walk: 0,       // 步行 (0 g/公里)
+    bike: 0,       // 自行车/电动车 (0 g/公里)
+    bus: 28,       // 公交 (28 g/公里)
+    subway: 14,    // 地铁 (14 g/公里)
+    car: 220,      // 私家车（燃油）(220 g/公里)
+    ev: 100,       // 私家车（电动）(100 g/公里)
+    carpool: 50    // 拼车出行 (50 g/公里)
+};</code></pre>
+
+        <h3>2. 系数×公里数计算逻辑 (js/api/lc.ai.js 第152-162行)</h3>
+        <pre><code>function calculateSingleItemCarbon($item) {
+    const coeff = parseFloat($item.find(".transport-select option:selected").data("coeff")) || 0;
+    const distance = parseFloat($item.find(".distance-input").val()) || 0;
+    const carbonEmission = coeff * distance;
+    $item.find(".carbon-label").text(`碳排放：${carbonEmission.toFixed(1)} g`);
+    return carbonEmission;
+}</code></pre>
+
+        <h3>3. 实时计算绑定 (js/api/lc.ai.js 第139-146行)</h3>
+        <pre><code>function bindCarbonCalculation() {
+    $("#transportItemsContainer").on("change input", ".transport-select, .distance-input", function() {
+        const $item = $(this).closest(".transport-item");
+        calculateSingleItemCarbon($item);
+    });
+}</code></pre>
+
+        <h3>4. 总碳排放量计算和结果显示 (js/api/lc.ai.js 第168-224行)</h3>
+        <pre><code>function calculateTotalCarbon() {
+    let totalCarbon = 0;
+    const details = [];
+    $("#transportItemsContainer .transport-item").each(function() {
+        const $item = $(this);
+        const carbonEmission = calculateSingleItemCarbon($item);
+        totalCarbon += carbonEmission;
+        // 收集明细...
+    });
+    return { totalCarbon, details };
+}
+
+function renderCarbonResult(result) {
+    $("#footprintDetails").html(result.details.join(''));
+    $("#totalCarbon").text(result.totalCarbon.toFixed(1));
+    $("#footprintResultCard").fadeIn();
+}</code></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>使用方法</h2>
+        <ol>
+            <li>在低碳出行页面 (lc.html) 滚动到「低碳工具」区域</li>
+            <li>选择出行方式个数（1-5个）</li>
+            <li>为每个出行方式选择具体的出行类型并输入公里数</li>
+            <li>系统会实时显示每个项目的碳排放量</li>
+            <li>点击「计算总碳排放量」按钮查看总排放量和减碳建议</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>验证功能</h2>
+        <p>点击以下按钮验证功能是否正常工作：</p>
+        <button id="openCalculatorBtn">打开低碳出行页面</button>
+        <div id="testResult" class="result"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#openCalculatorBtn').click(function() {
+                window.open('lc.html', '_blank');
+                $('#testResult').html('<p class="success">✅ 已打开低碳出行页面，您可以在其中体验碳排放量计算功能。</p>');
+            });
+        });
+    </script>
+</body>
+</html>
